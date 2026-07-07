@@ -1,0 +1,45 @@
+    <!-- Toast container (used by admin JS actions: save, delete, update, etc.) -->
+    <div id="adminToastContainer"></div>
+
+    <!-- Bootstrap JS (only if used elsewhere in admin pages, e.g. modals) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Shared Admin JS -->
+    <script>
+
+        // Generic toast for admin actions (product added, order updated, etc.)
+        function showAdminToast(message, type = "success") {
+            const toast = document.createElement("div");
+            toast.className = `admin-toast admin-toast-${type}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === "success" ? "fa-circle-check" : "fa-circle-xmark"}" aria-hidden="true"></i>
+                ${message}
+            `;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.classList.add("admin-toast-show"), 10);
+            setTimeout(() => {
+                toast.classList.remove("admin-toast-show");
+                setTimeout(() => toast.remove(), 400);
+            }, 2500);
+        }
+
+        // Auto-show toast from query params (?success=... or ?error=...)
+        document.addEventListener("DOMContentLoaded", function () {
+            const params = new URLSearchParams(window.location.search);
+
+            if (params.get("success")) {
+                showAdminToast(params.get("success"), "success");
+                window.history.replaceState({}, "", window.location.pathname);
+            }
+
+            if (params.get("error")) {
+                showAdminToast(params.get("error"), "error");
+                window.history.replaceState({}, "", window.location.pathname);
+            }
+        });
+
+    </script>
+
+</body>
+</html>

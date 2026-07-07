@@ -1,0 +1,221 @@
+<footer>
+
+  <!-- CTA SECTION -->
+  <section class="footer-cta d-none d-md-block">
+    <div class="cta-content">
+      <h2 class="cta-heading">
+        Ready to Taste the Difference?
+      </h2>
+
+      <p class="cta-text">
+        Order now and get free delivery on orders above ₹999.
+        Fresh cashews delivered to your doorstep.
+      </p>
+
+      <a href="/products" class="cta-btn">
+        Shop Now <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- MAIN FOOTER -->
+  <section class="main-footer">
+    <div class="container-fluid">
+      <div class="row gy-5">
+
+        <!-- Brand -->
+        <div class="col-12 col-md-6 col-lg-4 footer-brand text-center text-md-start">
+          <h4 class="footer-title">Safalam</h4>
+
+          <!-- Hide long text on mobile -->
+          <p class="footer-desc d-none d-md-block">
+            Pure, Premium, Perfect Cashews.
+            Bringing you the finest quality cashews
+            straight from our farms to your table since 1985.
+          </p>
+
+          <!-- Short mobile text -->
+          <p class="footer-desc d-block d-md-none">
+            Premium Kerala Cashews.
+          </p>
+
+          <div class="social-icons">
+            <i class="fa-brands fa-facebook-f"></i>
+            <i class="fa-brands fa-instagram"></i>
+            <i class="fa-brands fa-x-twitter"></i>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-6 col-md-6 col-lg-2 footer-links-section">
+          <h4 class="footer-title">Quick Links</h4>
+
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/products">Shop All</a></li>
+            <li><a href="/about">Our Story</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact -->
+        <div class="col-6 col-md-6 col-lg-3 footer-contact">
+          <h4 class="footer-title">Contact Us</h4>
+
+          <div class="contact-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>
+              Kasaragod, Kerala
+            </span>
+          </div>
+
+          <div class="contact-item">
+            <i class="fa-solid fa-phone"></i>
+            <span>+91 98765 43210</span>
+          </div>
+
+          <div class="contact-item">
+            <i class="fa-solid fa-envelope"></i>
+            <span>support@safalam.com</span>
+          </div>
+        </div>
+
+        <!-- Newsletter (Desktop Only) -->
+        <div class="col-lg-3 d-none d-lg-block footer-newsletter">
+          <h4 class="footer-title">Newsletter</h4>
+
+          <p class="newsletter-text">
+            Subscribe for exclusive offers and updates.
+          </p>
+
+          <form>
+            <input
+              type="email"
+              placeholder="Your email address"
+              class="newsletter-input"
+            >
+
+            <button class="newsletter-btn">
+              Subscribe
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Bottom -->
+      <div class="footer-bottom">
+        <p>© 2025 Safalam. All rights reserved.</p>
+      </div>
+    </div>
+  </section>
+
+</footer>
+    <script>
+    async function toggleWishlist(btn) {
+        const productId = btn.dataset.productId;
+        try {
+            const res = await fetch(`/wishlist/toggle/${productId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+            const data = await res.json();
+            if (data.status === "added") {
+                btn.classList.add("active");
+                btn.querySelector("i").classList.replace("fa-regular", "fa-solid");
+            } else {
+                btn.classList.remove("active");
+                btn.querySelector("i").classList.replace("fa-solid", "fa-regular");
+            }
+            showToast(data.message);
+        } catch (err) {
+            console.log(err);
+            showToast("Something went wrong");
+        }
+    }
+
+    // Toast function (if not already in footer)
+    function showToast(message) {
+        const toast = document.createElement("div");
+        toast.className = "cart-toast";
+        toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add("cart-toast-show"), 10);
+        setTimeout(() => {
+            toast.classList.remove("cart-toast-show");
+            setTimeout(() => toast.remove(), 400);
+        }, 2500);
+    }
+
+    // Toast on cart add
+    document.addEventListener("DOMContentLoaded", function () {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("added") === "true") {
+            showToast("Item added to cart!");
+            window.history.replaceState({}, "", window.location.pathname);
+        }
+    });
+    // Star rating input
+document.addEventListener("DOMContentLoaded", function () {
+    const stars = document.querySelectorAll(".star-input-icon");
+    const ratingInput = document.getElementById("ratingInput");
+
+    if (!stars.length) return;
+
+    // Set initial state if editing existing review
+    const currentRating = parseInt(ratingInput.value) || 0;
+    stars.forEach((star, idx) => {
+        if (idx < currentRating) {
+            star.classList.replace("fa-regular", "fa-solid");
+            star.classList.add("selected");
+        }
+    });
+
+    stars.forEach((star, index) => {
+
+        // Hover effect
+        star.addEventListener("mouseover", () => {
+            stars.forEach((s, i) => {
+                if (i <= index) {
+                    s.classList.replace("fa-regular", "fa-solid");
+                    s.style.color = "#f4a523";
+                } else {
+                    s.classList.replace("fa-solid", "fa-regular");
+                    s.style.color = "#ddd";
+                }
+            });
+        });
+
+        // Reset on mouse out
+        star.addEventListener("mouseout", () => {
+            const selected = parseInt(ratingInput.value) || 0;
+            stars.forEach((s, i) => {
+                if (i < selected) {
+                    s.classList.replace("fa-regular", "fa-solid");
+                    s.style.color = "#f4a523";
+                } else {
+                    s.classList.replace("fa-solid", "fa-regular");
+                    s.style.color = "#ddd";
+                }
+            });
+        });
+
+        // Click to select
+        star.addEventListener("click", () => {
+            ratingInput.value = index + 1;
+            stars.forEach((s, i) => {
+                if (i <= index) {
+                    s.classList.replace("fa-regular", "fa-solid");
+                    s.classList.add("selected");
+                    s.style.color = "#f4a523";
+                } else {
+                    s.classList.replace("fa-solid", "fa-regular");
+                    s.classList.remove("selected");
+                    s.style.color = "#ddd";
+                }
+            });
+        });
+
+    });
+});
+    </script>

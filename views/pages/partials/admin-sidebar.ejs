@@ -1,0 +1,124 @@
+<!-- MOBILE TOPBAR (hamburger) -->
+<div class="admin-mobile-topbar">
+
+    <div class="admin-mobile-brand">
+        <span class="admin-brand-icon" style="width:32px;height:32px;font-size:14px;">
+            <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+        </span>
+        <p class="admin-mobile-brand-name">Safalam</p>
+    </div>
+
+    <button class="admin-hamburger" id="adminHamburger" onclick="toggleAdminSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+</div>
+
+<!-- OVERLAY -->
+<div class="admin-sidebar-overlay" id="adminSidebarOverlay" onclick="closeAdminSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="admin-sidebar" id="adminSidebar">
+
+    <div class="admin-sidebar-top">
+
+        <div class="admin-brand">
+            <span class="admin-brand-icon"><i class="fa-solid fa-leaf" aria-hidden="true"></i></span>
+            <div>
+                <p class="admin-brand-name">Safalam</p>
+                <p class="admin-brand-sub">Admin Panel</p>
+            </div>
+        </div>
+
+        <nav class="admin-nav">
+
+            <a href="/admin/dashboard"
+                class="admin-nav-item <%= activePage === 'dashboard' ? 'admin-nav-active' : '' %>"
+                onclick="closeAdminSidebar()">
+                <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>
+                Dashboard
+            </a>
+
+            <a href="/admin/products"
+                class="admin-nav-item <%= activePage === 'products' ? 'admin-nav-active' : '' %>"
+                onclick="closeAdminSidebar()">
+                <i class="fa-solid fa-box" aria-hidden="true"></i>
+                Products
+            </a>
+
+            <a href="/admin/orders"
+                class="admin-nav-item <%= activePage === 'orders' ? 'admin-nav-active' : '' %>"
+                onclick="closeAdminSidebar()">
+                <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                Orders
+            </a>
+
+            <a href="/admin/customers"
+                class="admin-nav-item <%= activePage === 'customers' ? 'admin-nav-active' : '' %>"
+                onclick="closeAdminSidebar()">
+                <i class="fa-solid fa-users" aria-hidden="true"></i>
+                Customers
+            </a>
+
+            <a href="/admin/reviews"
+                class="admin-nav-item <%= activePage === 'reviews' ? 'admin-nav-active' : '' %>"
+                onclick="closeAdminSidebar()">
+                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                Reviews
+            </a>
+
+            <a href="/admin/settings"
+                class="admin-nav-item <%= activePage === 'settings' ? 'admin-nav-active' : '' %>"
+                onclick="closeAdminSidebar()">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                Settings
+            </a>
+
+        </nav>
+
+    </div>
+
+    <div class="admin-sidebar-bottom">
+
+        <p class="admin-signed-in">Signed in as</p>
+        <p class="admin-username">admin</p>
+
+        <form action="/admin/logout" method="POST">
+            <button class="admin-logout-btn">
+                <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+                Logout
+            </button>
+        </form>
+
+    </div>
+
+</aside>
+
+<script>
+    function toggleAdminSidebar() {
+        const sidebar = document.getElementById("adminSidebar");
+        const overlay = document.getElementById("adminSidebarOverlay");
+        const hamburger = document.getElementById("adminHamburger");
+
+        sidebar.classList.toggle("admin-sidebar-open");
+        overlay.classList.toggle("active");
+        hamburger.classList.toggle("open");
+    }
+
+    function closeAdminSidebar() {
+        const sidebar = document.getElementById("adminSidebar");
+        const overlay = document.getElementById("adminSidebarOverlay");
+        const hamburger = document.getElementById("adminHamburger");
+
+        sidebar.classList.remove("admin-sidebar-open");
+        overlay.classList.remove("active");
+        hamburger.classList.remove("open");
+    }
+
+    // Close on ESC key
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") closeAdminSidebar();
+    });
+</script>

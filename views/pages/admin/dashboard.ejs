@@ -1,0 +1,207 @@
+<%- include('../../layout/admin-header') %>
+
+
+<div class="admin-wrapper">
+
+    <%- include('../partials/admin-sidebar') %>
+
+    <main class="admin-main">
+
+        <div class="admin-page-header">
+            <h1 class="admin-page-title">Dashboard</h1>
+            <p class="admin-page-sub">Overview of your store performance</p>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="admin-stats">
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-green">
+                        <i class="fa-solid fa-indian-rupee-sign" aria-hidden="true"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-trend-up admin-trend-icon" aria-hidden="true"></i>
+                </div>
+                <p class="admin-stat-value">₹<%= totalRevenue.toLocaleString('en-IN') %></p>
+                <p class="admin-stat-label">Total Revenue</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-gold">
+                        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-trend-up admin-trend-icon" aria-hidden="true"></i>
+                </div>
+                <p class="admin-stat-value"><%= totalOrders %></p>
+                <p class="admin-stat-label">Total Orders</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-green">
+                        <i class="fa-solid fa-users" aria-hidden="true"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-trend-up admin-trend-icon" aria-hidden="true"></i>
+                </div>
+                <p class="admin-stat-value"><%= totalCustomers %></p>
+                <p class="admin-stat-label">Customers</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-gold">
+                        <i class="fa-solid fa-box" aria-hidden="true"></i>
+                    </div>
+                    <i class="fa-solid fa-arrow-trend-up admin-trend-icon" aria-hidden="true"></i>
+                </div>
+                <p class="admin-stat-value"><%= totalProducts %></p>
+                <p class="admin-stat-label">Products</p>
+            </div>
+
+        </div>
+
+        <!-- RECENT ORDERS + QUICK STATS -->
+        <div class="admin-grid-2col">
+
+            <!-- RECENT ORDERS -->
+            <div class="admin-card">
+
+                <div class="admin-card-header-row">
+                    <h3 class="admin-card-title">Recent Orders</h3>
+                    <a href="/admin/orders" class="admin-view-all">View all</a>
+                </div>
+
+                <% if(recentOrders.length === 0){ %>
+
+                    <p class="admin-empty-text">No orders yet</p>
+
+                <% } else { %>
+
+                    <div class="admin-orders-list">
+
+                        <% recentOrders.forEach(order => { %>
+
+                            <a href="/admin/orders/<%= order._id %>" class="admin-order-row">
+
+                                <div class="admin-order-meta">
+                                    <p class="admin-order-id">#<%= order._id.toString().slice(-8).toUpperCase() %></p>
+                                    <p class="admin-order-sub">
+                                        <%= order.user ? order.user.name : 'Unknown' %> •
+                                        <%= new Date(order.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'numeric', year:'numeric'}) %>
+                                    </p>
+                                </div>
+
+                                <span class="admin-status-badge admin-status-<%= order.orderStatus.toLowerCase() %>">
+                                    <%= order.orderStatus.toLowerCase() %>
+                                </span>
+
+                                <span class="admin-order-amount">₹<%= order.total %></span>
+
+                            </a>
+
+                        <% }) %>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+            <!-- QUICK STATS -->
+            <div class="admin-card">
+
+                <h3 class="admin-card-title">Quick Stats</h3>
+
+                <div class="admin-quick-stat-row">
+                    <div class="admin-quick-stat-icon admin-icon-amber">
+                        <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="admin-quick-stat-value"><%= pendingOrders %></p>
+                        <p class="admin-quick-stat-label">Pending Orders</p>
+                    </div>
+                </div>
+
+                <div class="admin-quick-stat-row">
+                    <div class="admin-quick-stat-icon admin-icon-green">
+                        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="admin-quick-stat-value">₹<%= avgOrderValue %></p>
+                        <p class="admin-quick-stat-label">Avg Order Value</p>
+                    </div>
+                </div>
+
+                <div class="admin-quick-stat-row">
+                    <div class="admin-quick-stat-icon admin-icon-gold">
+                        <i class="fa-solid fa-box" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="admin-quick-stat-value"><%= unitsSold %></p>
+                        <p class="admin-quick-stat-label">Units Sold</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- REVIEWS SECTION -->
+        <div class="admin-card admin-reviews-card">
+
+            <div class="admin-card-header-row">
+                <h3 class="admin-card-title">Product Reviews</h3>
+                <div class="admin-reviews-total">
+                    <i class="fa-solid fa-star" aria-hidden="true"></i>
+                    <%= totalReviews %> total review<%= totalReviews !== 1 ? 's' : '' %>
+                </div>
+            </div>
+
+            <% if(reviewsByProduct.length === 0){ %>
+
+                <p class="admin-empty-text">No reviews yet</p>
+
+            <% } else { %>
+
+                <div class="admin-review-table">
+
+                    <div class="admin-review-table-head">
+                        <span>Product</span>
+                        <span>Avg Rating</span>
+                        <span>Reviews</span>
+                    </div>
+
+                    <% reviewsByProduct.forEach(r => { %>
+
+                        <div class="admin-review-table-row">
+
+                            <div class="admin-review-product">
+                                <img src="<%= r.product.image %>" alt="<%= r.product.name %>">
+                                <span><%= r.product.name %></span>
+                            </div>
+
+                            <div class="admin-review-stars">
+                                <% for(let i = 1; i <= 5; i++){ %>
+                                    <i class="fa-<%= i <= Math.round(r.avgRating) ? 'solid' : 'regular' %> fa-star" aria-hidden="true"></i>
+                                <% } %>
+                                <span class="admin-review-score"><%= r.avgRating.toFixed(1) %></span>
+                            </div>
+
+                            <span class="admin-review-count"><%= r.totalReviews %></span>
+
+                        </div>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </main>
+
+</div>
+
+<%- include('../../layout/admin-footer') %>

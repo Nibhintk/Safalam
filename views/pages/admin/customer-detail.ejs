@@ -1,0 +1,169 @@
+<%- include('../../layout/admin-header') %>
+
+<div class="admin-wrapper">
+
+    <%- include('../partials/admin-sidebar', { activePage }) %>
+
+    <main class="admin-main">
+
+        <a href="/admin/customers" class="admin-back-link">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Back to customers
+        </a>
+
+        <!-- HEADER -->
+        <div class="admin-customer-detail-header">
+
+            <div class="admin-customer-avatar admin-customer-avatar-lg">
+                <%= user.name.charAt(0).toUpperCase() %>
+            </div>
+
+            <div>
+                <h1 class="admin-page-title" style="margin-bottom:4px;"><%= user.name %></h1>
+                <p class="admin-page-sub"><%= user.email %></p>
+                <p class="admin-page-sub">
+                    Member since <%= new Date(user.createdAt).toLocaleDateString('en-IN', {month:'long', year:'numeric'}) %>
+                </p>
+            </div>
+
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="admin-stats" style="margin-bottom:1.5rem;">
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-green">
+                        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <p class="admin-stat-value"><%= orders.length %></p>
+                <p class="admin-stat-label">Total Orders</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-gold">
+                        <i class="fa-solid fa-indian-rupee-sign" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <p class="admin-stat-value">₹<%= totalSpent.toLocaleString('en-IN') %></p>
+                <p class="admin-stat-label">Total Spent</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-green">
+                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <p class="admin-stat-value"><%= addresses.length %></p>
+                <p class="admin-stat-label">Saved Addresses</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-gold">
+                        <i class="fa-solid fa-star" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <p class="admin-stat-value"><%= reviews.length %></p>
+                <p class="admin-stat-label">Reviews Given</p>
+            </div>
+
+        </div>
+
+        <div class="admin-grid-2col">
+
+            <!-- ORDERS -->
+            <div class="admin-card">
+
+                <div class="admin-card-header-row">
+                    <h3 class="admin-card-title">Orders</h3>
+                    <a href="/admin/orders" class="admin-view-all">View all orders</a>
+                </div>
+
+                <% if(orders.length === 0){ %>
+                    <p class="admin-empty-text">No orders yet</p>
+                <% } else { %>
+                    <div class="admin-orders-list">
+                        <% orders.forEach(order => { %>
+                            <a href="/admin/orders/<%= order._id %>" class="admin-order-row">
+                                <div class="admin-order-meta">
+                                    <p class="admin-order-id">#<%= order._id.toString().slice(-8).toUpperCase() %></p>
+                                    <p class="admin-order-sub">
+                                        <%= new Date(order.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) %>
+                                    </p>
+                                </div>
+                                <span class="admin-status-badge admin-status-<%= order.orderStatus.toLowerCase() %>">
+                                    <%= order.orderStatus.toLowerCase() %>
+                                </span>
+                                <span class="admin-order-amount">₹<%= order.total %></span>
+                                <i class="fa-regular fa-chevron-right" style="color:#ccc;font-size:12px;" aria-hidden="true"></i>
+                            </a>
+                        <% }) %>
+                    </div>
+                <% } %>
+
+            </div>
+
+            <div>
+
+                <!-- ADDRESSES -->
+                <div class="admin-card" style="margin-bottom:1.25rem;">
+
+                    <h3 class="admin-card-title" style="margin-bottom:1rem;">Saved Addresses</h3>
+
+                    <% if(addresses.length === 0){ %>
+                        <p class="admin-empty-text">No addresses saved</p>
+                    <% } else { %>
+                        <% addresses.forEach(addr => { %>
+                            <div class="admin-address-item">
+                                <span class="admin-address-type-badge"><%= addr.addressType %></span>
+                                <p class="admin-detail-name"><%= addr.fullName %></p>
+                                <p class="admin-detail-line"><%= addr.house %>, <%= addr.city %></p>
+                                <p class="admin-detail-line"><%= addr.district %>, <%= addr.state %> — <%= addr.pincode %></p>
+                                <p class="admin-detail-line">📞 <%= addr.phone %></p>
+                            </div>
+                        <% }) %>
+                    <% } %>
+
+                </div>
+
+                <!-- REVIEWS -->
+                <div class="admin-card">
+
+                    <h3 class="admin-card-title" style="margin-bottom:1rem;">Reviews</h3>
+
+                    <% if(reviews.length === 0){ %>
+                        <p class="admin-empty-text">No reviews given</p>
+                    <% } else { %>
+                        <% reviews.forEach(review => { %>
+                            <div class="admin-customer-review-item">
+                                <div class="admin-customer-review-top">
+                                    <% if(review.product){ %>
+                                        <img src="<%= review.product.image %>" alt="" class="admin-customer-review-img">
+                                        <p class="admin-detail-name" style="font-size:13px;"><%= review.product.name %></p>
+                                    <% } %>
+                                    <div class="admin-review-stars" style="margin-left:auto;">
+                                        <% for(let i = 1; i <= 5; i++){ %>
+                                            <i class="fa-<%= i <= review.rating ? 'solid' : 'regular' %> fa-star" aria-hidden="true"></i>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <p class="admin-customer-review-comment"><%= review.comment %></p>
+                            </div>
+                        <% }) %>
+                    <% } %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<%- include('../../layout/admin-footer') %>

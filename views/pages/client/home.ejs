@@ -1,0 +1,187 @@
+<div class="container-fluid outer-box d-flex flex-column flex-md-row align-items-center justify-content-between py-5">
+    <div class="writing text-center text-md-start order-2 order-md-1">
+        <h1 class="headlines">Pure, Premium,</h1>
+        <h1 class="headlines"><span class="yellow">Perfect</span> Cashews</h1>
+        
+        <p class="para">Experience the finest hand-picked cashews from the lush groves of Kerala. Crafted with love, delivered with care.</p>
+        <div class="btn-box">
+            <form action="/products" method="get">
+                <button class="mybtn btn mt-3 ms-2" >Shop Now</button>
+            </form>
+            <form action="/products" method="get">
+                <button class="my-btn  mt-3 ms-2">Explore Products</button>
+            </form>
+
+        </div>
+        
+
+        
+    </div>
+
+    <div class="img-container text-center mt-4 mt-md-0 order-1 order-md-2">
+        <img src="https://images.unsplash.com/photo-1729514256038-c489695f4d79?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="cashew-img img-fluid" alt="Cashew Image">
+    </div>
+</div>
+
+<div class="container-fluid my-4  ">
+  <div class="row g-4 feature-box ">
+
+    <div class="col-12 col-sm-6 col-lg-3">
+      <div class="feature-card text-center p-4">
+        <div class="icon-circle">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <h5 class="feature-title mt-3">Farm Fresh</h5>
+        <p class="feature-text">Straight from our organic farms</p>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3">
+      <div class="feature-card text-center p-4">
+        <div class="icon-circle">
+          <i class="fa-solid fa-award"></i>
+        </div>
+        <h5 class="feature-title mt-3">Hand-Picked</h5>
+        <p class="feature-text">Carefully selected premium nuts</p>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3">
+      <div class="feature-card text-center p-4">
+        <div class="icon-circle">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h5 class="feature-title mt-3">Export Quality</h5>
+        <p class="feature-text">Meeting global standards</p>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3">
+      <div class="feature-card text-center p-4">
+        <div class="icon-circle">
+          <i class="fa-solid fa-truck"></i>
+        </div>
+        <h5 class="feature-title mt-3">No Preservatives</h5>
+        <p class="feature-text">100% natural goodness</p>
+      </div>
+    </div>
+    <div class="story">
+    <div class="story-text">
+        <h2 class="story-headline">Our Story</h2>
+        <p class="story-para">
+            For over three decades, Safalam has been synonymous with premium quality cashews. Nestled in the verdant groves of Kerala, our family-owned farms have been nurturing cashew trees with love and dedication. Every nut we produce carries the essence of our land—pure, natural, and bursting with flavor</p>
+        <p class="story-para">
+            From careful hand-picking to meticulous processing, we ensure that only the finest cashews reach your table. No preservatives, no shortcuts—just honest, wholesome goodness that you can taste in every bite.
+        </p>
+    </div>
+
+    </div>
+
+  </div>
+</div>
+<section class="container my-3">
+  <div class="row g-4">
+    <h1 class="story-headline text-center mb-2">Featured Products</h1>
+    <p class="story-para text-center mb-2">Discover our hand-picked selection of premium cashews, crafted for your delight.</p>
+
+    <% for (let product of products) { %>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+        <div class="card width-100">
+          <div class="product-img-wrapper">
+          
+            <img src="<%= product.image %>" class="card-img-top product-img" alt="<%= product.name %>">
+          </div>
+          
+
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title headlines-card"><%= product.name %></h5>
+            <p class="card-text"><%= product.description %></p>
+
+            <div class="weight-options mb-3">
+
+                  <% Object.keys(product.prices).forEach(function(weight,index) { %>
+
+                    <button
+                      class="weight-btn <%= index === 0 ? 'active' : '' %>"
+                      data-product-id="<%= product._id %>"
+                      data-price="<%= product.prices[weight] %>">
+
+                      <%= weight %>g
+
+                    </button>
+
+                  <% }) %>
+
+                </div>
+
+              <div class="price-row mt-auto d-flex justify-content-between align-items-center">
+
+                  <span
+                      id="price-<%= product._id %>"
+                      class="price">
+                      ₹<%= Object.values(product.prices)[0] %>
+                  </span>
+
+                  <form action="/cart/add" method="POST" class="add-to-cart-form">
+                      <input type="hidden" name="productId" value="<%= product._id %>">
+                      <input type="hidden" name="weight" id="weight-<%= product._id %>" value="<%= Object.keys(product.prices)[0] %>">
+                      <input type="hidden" name="quantity" id="selectedQuantity" value="1">
+                      <input type="hidden" name="redirectUrl" value="/products">
+                      <button type="submit" class="add-btn">
+                          <i class="fa-solid fa-cart-shopping"></i> Add
+                      </button>
+                  </form>
+
+              </div>
+
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+
+  <form action="/products" method="get">
+    <div class="text-center mt-4 mb-5">
+      <button class="view-btn">View All Products</button>
+    </div>
+
+  </form>
+</section>
+
+<script>
+  function updatePrice(id, price) {
+    document.getElementById("price-" + id).innerText = "₹" + price;
+  }
+  
+   document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".weight-options").forEach(group => {
+
+      group.querySelectorAll(".weight-btn").forEach(button => {
+        button.addEventListener("click", function () {
+
+          const productId = this.dataset.productId;
+          const price = this.dataset.price;
+
+          // 🔴 REMOVE active from ALL buttons in THIS group
+          group.querySelectorAll(".weight-btn").forEach(btn => {
+            btn.classList.remove("active");
+          });
+
+          // 🟢 ADD active to clicked button
+          this.classList.add("active");
+
+          // update price
+          const priceEl = document.getElementById("price-" + productId);
+          if (priceEl) {
+            priceEl.innerText = "₹" + price;
+          }
+
+        });
+      });
+
+    });
+  });
+
+</script>
+

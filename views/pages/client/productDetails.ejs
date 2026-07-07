@@ -1,0 +1,421 @@
+<section class="container-fluid product-detail-page py-4 " >
+
+  <!-- BACK BUTTON -->
+  
+
+  <div class="row g-5 " >
+
+    <!-- PRODUCT IMAGE -->
+    <div class="col-12 col-lg-6">
+        <div class="mb-4">
+    <a href="/products" class="back-link">
+      <i class="fa-solid fa-arrow-left"></i>
+      Back to Products
+    </a>
+  </div>
+
+      <div class="detail-image-wrapper">
+
+        <img
+          src="<%= product.image %>"
+          alt="<%= product.name %>"
+          class="detail-image">
+        <button
+            class="wishlist-btn <%= isWishlisted ? 'active' : '' %>"
+            data-product-id="<%= product._id %>"
+            onclick="toggleWishlist(this)">
+            <i class="<%= isWishlisted ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
+            
+        </button>
+      </div>
+            
+
+    </div>
+
+    <!-- PRODUCT INFO -->
+    <div class="col-12 col-lg-6">
+
+      <div class="product-info">
+
+        <!-- CATEGORY -->
+        <p class="product-category">
+          <%= product.category.toUpperCase() %> CASHEWS
+        </p>
+
+        <!-- TITLE -->
+        <h1 class="product-title">
+          <%= product.name %>
+        </h1>
+
+        <!-- DESCRIPTION -->
+        <p class="product-description">
+          <%= product.description %>
+        </p>
+
+        <!-- PRICE -->
+        <div class="price-section">
+
+          <span class="main-price" id="product-price">
+            ₹<%= product.prices["250"] %>
+          </span>
+
+          <span class="old-price">
+            ₹839
+          </span>
+
+          <span class="discount-text">
+            Save 17%
+          </span>
+
+        </div>
+
+        <!-- WEIGHT -->
+        <div class="mt-5">
+
+          <h5 class="section-title">
+            Choose Weight
+          </h5>
+
+          <div class="weight-options mt-3">
+
+            <% Object.keys(product.prices).forEach(function(weight,index){ %>
+
+              <button
+                type="button"
+                class="weight-btn <%= index === 0 ? 'active' : '' %>"
+                data-price="<%= product.prices[weight] %>"
+                data-weight="<%= weight %>">
+
+                <%= weight == "1000" ? "1kg" : weight + "g" %>
+
+              </button>
+
+            <% }) %>
+
+          </div>
+
+        </div>
+
+        <!-- QUANTITY -->
+        <div class="quantity-box mt-3">
+
+        <button class="qty-btn" id="decreaseQty">
+            −
+        </button>
+
+        <span class="qty-number" id="qtyValue">
+            1
+        </span>
+
+        <button class="qty-btn" id="increaseQty">
+            +
+        </button>
+
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="action-buttons mt-5">
+          
+            <form action="/cart/add" method="POST" id="cartForm">
+
+            <input
+                type="hidden"
+                name="productId"
+                value="<%= product._id %>">
+
+            <input
+                type="hidden"
+                name="weight"
+                id="selectedWeight"
+                value="250">
+
+            <input
+                type="hidden"
+                name="quantity"
+                id="selectedQuantity"
+                value="1">
+            <input type="hidden" name="redirectUrl" value="/products/<%= product._id %>">
+            <button type="submit" class="cart-btn">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+                Add to Cart
+
+            </button>
+
+            </form>
+
+          <form action="/checkout/buynow" method="POST" id="buyNowForm">
+
+                <input type="hidden" name="productId" value="<%= product._id %>">
+                <input type="hidden" name="weight" id="buyNowWeight" value="250">
+                <input type="hidden" name="quantity" id="buyNowQuantity" value="1">
+
+                <button type="submit" class="buy-btn">
+                    <i class="fa-solid fa-bolt"></i>
+                    Buy Now
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- FEATURES -->
+        <div class="product-features mt-5">
+
+          <div class="feature-item">
+            <i class="fa-regular fa-lemon"></i>
+            100% Natural
+          </div>
+
+          <div class="feature-item">
+            <i class="fa-regular fa-award"></i>
+            Export Quality
+          </div>
+
+          <div class="feature-item">
+            <i class="fa-solid fa-box"></i>
+            Fresh Packaging
+          </div>
+
+          <div class="feature-item">
+            <i class="fa-solid fa-truck"></i>
+            Fast Delivery
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="reviews-section">
+
+    <div class="reviews-header">
+
+        <div>
+            <h3 class="reviews-title">Customer Reviews</h3>
+            <% if(avgRating){ %>
+                <div class="reviews-avg">
+                    <div class="stars-display">
+                        <% for(let i = 1; i <= 5; i++){ %>
+                            <i class="fa-<%= i <= Math.round(avgRating) ? 'solid' : 'regular' %> fa-star"></i>
+                        <% } %>
+                    </div>
+                    <span class="avg-score"><%= avgRating %> out of 5</span>
+                    <span class="review-count">(<%= reviews.length %> review<%= reviews.length !== 1 ? 's' : '' %>)</span>
+                </div>
+            <% } else { %>
+                <p class="no-reviews-yet">No reviews yet</p>
+            <% } %>
+        </div>
+
+    </div>
+
+    <!-- ALERTS -->
+    <% if(reviewSuccess){ %>
+        <div class="review-alert review-alert-success">
+            <i class="fa-regular fa-circle-check"></i>
+            <%= reviewSuccess %>
+        </div>
+    <% } %>
+    <% if(reviewError){ %>
+        <div class="review-alert review-alert-error">
+            <i class="fa-regular fa-circle-xmark"></i>
+            <%= reviewError %>
+        </div>
+    <% } %>
+
+    <!-- WRITE A REVIEW -->
+    <% if(locals.user){ %>
+        <% if(hasPurchased){ %>
+
+<div class="write-review-card">
+
+    <h5 class="write-review-title">
+        <%= userReview ? 'Edit your review' : 'Write a review' %>
+    </h5>
+
+    <!-- REVIEW FORM -->
+            <form action="/products/<%= product._id %>/review" method="POST" class="review-form" id="reviewForm">
+
+            <div class="star-input-group">
+                <p class="review-label">Your rating</p>
+                <div class="star-input" id="starInput">
+                    <% for(let i = 1; i <= 5; i++){ %>
+                        <i class="fa-<%= userReview && userReview.rating >= i ? 'solid' : 'regular' %> fa-star star-input-icon"
+                        data-value="<%= i %>"></i>
+                    <% } %>
+                </div>
+                <input type="hidden" name="rating" id="ratingInput" value="<%= userReview ? userReview.rating : '' %>" required>
+            </div>
+
+            <div class="review-form-group">
+                <p class="review-label">Your comment</p>
+                <textarea
+                    name="comment"
+                    class="review-textarea"
+                    rows="3"
+                    placeholder="Share your experience with this product..."
+                    required><%= userReview ? userReview.comment : '' %></textarea>
+            </div>
+
+            <div class="review-buttons-row">
+
+                <button type="submit" class="review-submit-btn">
+                    <%= userReview ? 'Update Review' : 'Submit Review' %>
+                </button>
+
+                <% if(userReview){ %>
+                    <button
+                        type="button"
+                        class="review-delete-btn"
+                        onclick="if(confirm('Delete your review?')) document.getElementById('deleteReviewForm').submit()">
+                        Delete Review
+                    </button>
+                <% } %>
+
+            </div>
+
+        </form>
+
+        <!-- Hidden delete form — outside the review form -->
+        <% if(userReview){ %>
+            <form
+                action="/products/<%= product._id %>/review/delete"
+                method="POST"
+                id="deleteReviewForm">
+            </form>
+        <% } %>
+           
+        
+  </div>
+        <% } else { %>
+
+            <div class="review-purchase-notice">
+                <i class="fa-regular fa-circle-info"></i>
+                Only customers who have purchased and received this product can leave a review.
+            </div>
+
+        <% } %>
+    <% } %>
+
+    <!-- ALL REVIEWS -->
+    <% if(reviews.length > 0){ %>
+
+        <div class="reviews-list">
+
+            <% reviews.forEach(review => { %>
+
+                <div class="review-card">
+
+                    <div class="review-card-top">
+
+                        <div class="reviewer-avatar">
+                            <%= review.user.name.charAt(0).toUpperCase() %>
+                        </div>
+
+                        <div class="reviewer-info">
+                            <p class="reviewer-name"><%= review.user.name %></p>
+                            <p class="review-date">
+                                <%= new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                            </p>
+                        </div>
+
+                        <div class="review-stars">
+                            <% for(let i = 1; i <= 5; i++){ %>
+                                <i class="fa-<%= i <= review.rating ? 'solid' : 'regular' %> fa-star"></i>
+                            <% } %>
+                        </div>
+
+                    </div>
+
+                    <p class="review-comment"><%= review.comment %></p>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+    <% } %>
+
+</div>
+
+</section>
+
+<script>
+
+  let quantity = 1;
+
+  const qtyValue = document.getElementById("qtyValue");
+  const increaseBtn = document.getElementById("increaseQty");
+  const decreaseBtn = document.getElementById("decreaseQty");
+  const quantityInput = document.getElementById("selectedQuantity");
+  const buyNowQty = document.getElementById("buyNowQuantity");
+  const buyNowWeight = document.getElementById("buyNowWeight");
+
+  // WEIGHT SELECTION
+  document.querySelectorAll(".weight-btn").forEach(button => {
+    button.addEventListener("click", function () {
+
+      document.querySelectorAll(".weight-btn").forEach(btn => {
+        btn.classList.remove("active");
+      });
+
+      this.classList.add("active");
+
+      const newPrice = this.dataset.price;
+      const newWeight = this.dataset.weight;
+
+      document.getElementById("product-price").innerText = "₹" + newPrice;
+
+      // Update cart form weight
+      document.getElementById("selectedWeight").value = newWeight;
+
+      // Update buy now form weight
+      buyNowWeight.value = newWeight;
+
+    });
+  });
+
+  // INCREASE
+  increaseBtn.addEventListener("click", () => {
+    quantity++;
+    qtyValue.innerText = quantity;
+    quantityInput.value = quantity;
+    buyNowQty.value = quantity; // sync buy now
+  });
+
+  // DECREASE
+  decreaseBtn.addEventListener("click", () => {
+    if (quantity > 1) {
+      quantity--;
+      qtyValue.innerText = quantity;
+      quantityInput.value = quantity;
+      buyNowQty.value = quantity; // sync buy now
+    }
+  });
+
+  // TOAST
+  document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("added") === "true") {
+      showToast("Item added to cart!");
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  });
+
+  function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "cart-toast";
+    toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${message}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add("cart-toast-show"), 10);
+    setTimeout(() => {
+      toast.classList.remove("cart-toast-show");
+      setTimeout(() => toast.remove(), 400);
+    }, 2500);
+  }
+
+</script>

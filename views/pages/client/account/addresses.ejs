@@ -1,0 +1,104 @@
+
+
+<div class="acc-wrapper">
+
+    <%- include('../../partials/account-sidebar') %>
+
+    <main class="acc-main">
+
+        <div class="acc-page-header acc-page-header-row">
+            <div>
+                <h1 class="acc-page-title">Saved Addresses</h1>
+                <p class="acc-page-sub"><%= addresses.length %> address<%= addresses.length !== 1 ? 'es' : '' %> saved</p>
+            </div>
+            <a href="/account/addresses/add" class="acc-btn-primary acc-btn-sm">
+                <i class="fa-regular fa-plus" aria-hidden="true"></i> Add new
+            </a>
+        </div>
+
+        <!-- ALERTS -->
+        <% if(success){ %>
+            <div class="acc-alert acc-alert-success">
+                <i class="fa-regular fa-circle-check" aria-hidden="true"></i>
+                <%= success %>
+            </div>
+        <% } %>
+        <% if(error){ %>
+            <div class="acc-alert acc-alert-error">
+                <i class="fa-regular fa-circle-xmark" aria-hidden="true"></i>
+                <%= error %>
+            </div>
+        <% } %>
+
+        <% if(addresses.length === 0){ %>
+
+            <div class="acc-empty">
+                <i class="fa-regular fa-location-dot" aria-hidden="true"></i>
+                <p>No saved addresses yet</p>
+                <a href="/account/addresses/add" class="acc-empty-btn">Add Address</a>
+            </div>
+
+        <% } else { %>
+
+            <div class="acc-address-grid">
+
+                <% addresses.forEach(addr => { %>
+
+                    <div class="acc-address-card <%= addr.isDefault ? 'acc-address-default' : '' %>">
+
+                        <div class="acc-address-card-top">
+
+                            <div class="acc-addr-badges">
+                                <span class="acc-type-badge"><%= addr.addressType %></span>
+                                <% if(addr.isDefault){ %>
+                                    <span class="acc-default-badge">Default</span>
+                                <% } %>
+                            </div>
+
+                            <div class="acc-address-actions">
+
+                                <a href="/account/addresses/edit/<%= addr._id %>" class="acc-icon-btn" title="Edit">
+                                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+                                </a>
+
+                                <form action="/account/addresses/delete/<%= addr._id %>" method="POST" style="display:inline;">
+                                    <button
+                                        class="acc-icon-btn acc-icon-danger"
+                                        onclick="return confirm('Delete this address?')"
+                                        title="Delete">
+                                        <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                                    </button>
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                        <p class="acc-addr-name"><%= addr.fullName %></p>
+                        <p class="acc-addr-line"><%= addr.house %></p>
+                        <p class="acc-addr-line"><%= addr.city %>, <%= addr.district %></p>
+                        <p class="acc-addr-line"><%= addr.state %> — <%= addr.pincode %></p>
+                        <% if(addr.landmark){ %>
+                            <p class="acc-addr-line acc-addr-landmark">Near <%= addr.landmark %></p>
+                        <% } %>
+                        <p class="acc-addr-line" style="margin-top:6px;">📞 <%= addr.phone %></p>
+
+                        <% if(!addr.isDefault){ %>
+                            <form action="/account/addresses/default/<%= addr._id %>" method="POST" style="margin-top:12px;">
+                                <button class="acc-set-default-btn">Set as default</button>
+                            </form>
+                        <% } %>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+    </main>
+
+</div>
+
+

@@ -1,0 +1,85 @@
+
+
+<div class="acc-wrapper">
+
+    <%- include('../../partials/account-sidebar') %>
+
+    <main class="acc-main">
+
+        <div class="acc-page-header">
+            <h1 class="acc-page-title">My Wishlist</h1>
+            <p class="acc-page-sub"><%= wishlistItems.length %> saved item<%= wishlistItems.length !== 1 ? 's' : '' %></p>
+        </div>
+
+        <% if(wishlistItems.length === 0){ %>
+
+            <div class="acc-empty">
+                <i class="fa-regular fa-heart"></i>
+                <p>Your wishlist is empty</p>
+                <a href="/products" class="acc-empty-btn">Browse Products</a>
+            </div>
+
+        <% } else { %>
+
+            <div class="wishlist-grid">
+
+                <% wishlistItems.forEach(item => { %>
+
+                    <div class="wishlist-card" id="wish-<%= item.product._id %>">
+
+                        <a href="/products/<%= item.product._id %>">
+                            <img src="<%= item.product.image %>" alt="<%= item.product.name %>">
+                        </a>
+
+                        <div class="wishlist-card-info">
+
+                            <a href="/products/<%= item.product._id %>" class="wishlist-card-name">
+                                <%= item.product.name %>
+                            </a>
+
+                            <p class="wishlist-card-price">
+                                from ₹<%= Object.values(item.product.prices)[0] %>
+                            </p>
+
+                            <div class="wishlist-card-actions">
+
+                                <form action="/cart/add" method="POST">
+                                    <input type="hidden" name="productId" value="<%= item.product._id %>">
+                                    <input type="hidden" name="weight" value="<%= Object.keys(item.product.prices)[0] %>">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <input type="hidden" name="redirectUrl" value="/account/wishlist">
+                                    <button class="acc-btn-primary acc-btn-sm">
+                                        <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+                                    </button>
+                                </form>
+
+                                <button
+                                    class="wishlist-remove-btn"
+                                    onclick="removeFromWishlist(this, '<%= item.product._id %>')">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+    </main>
+
+</div>
+
+<script>
+async function removeFromWishlist(btn, productId) {
+    await fetch(`/wishlist/toggle/${productId}`, { method: "POST" });
+    document.getElementById("wish-" + productId).remove();
+    showToast("Removed from wishlist");
+}
+</script>
+

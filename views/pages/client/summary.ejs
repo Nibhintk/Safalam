@@ -1,0 +1,161 @@
+<section class="container my-5">
+
+    <!-- PROGRESS -->
+        <div class="checkout-progress mb-5">
+
+            <div class="cp-step done">
+                <div class="cp-circle">1</div>
+                <span class="cp-label">Address</span>
+            </div>
+
+            <div class="cp-connector done"></div>
+
+            <div class="cp-step active">
+                <div class="cp-circle">2</div>
+                <span class="cp-label">Order Summary</span>
+            </div>
+
+            <div class="cp-connector"></div>
+
+            <div class="cp-step">
+                <div class="cp-circle">3</div>
+                <span class="cp-label">Confirmation</span>
+            </div>
+
+        </div>
+
+    <h1 class="mb-5 navbar-brand">Order Summary</h1>
+
+    <div class="row">
+
+        <!-- LEFT: ADDRESS + ITEMS -->
+        <div class="col-lg-8">
+
+            <!-- ADDRESS -->
+            <p class="summary-section-label">Delivery Address</p>
+
+            <div class="summary-address-card">
+
+                <span class="address-type-badge"><%= address.addressType || "Home" %></span>
+
+                <h6 class="address-name"><%= address.fullName %></h6>
+
+                <p class="address-line"><%= address.house %></p>
+
+                <p class="address-line">
+                    <%= address.city %>, <%= address.district %>
+                </p>
+
+                <p class="address-line">
+                    <%= address.state %> — <%= address.pincode %>
+                </p>
+
+                <% if(address.landmark){ %>
+                    <p class="address-line">Near <%= address.landmark %></p>
+                <% } %>
+
+                <p class="address-phone">📞 <%= address.phone %></p>
+
+            </div>
+
+            <!-- ITEMS -->
+            <p class="summary-section-label mt-4">Items in Your Order</p>
+
+            <div class="summary-items-card">
+
+                <% cartItems.forEach(item => { %>
+
+                    <div class="summary-item-row">
+
+                        <div class="summary-item-img">
+                            <img src="<%= item.product.image %>" alt="<%= item.product.name %>">
+                        </div>
+
+                        <div class="summary-item-info">
+
+                            <p class="summary-item-name"><%= item.product.name %></p>
+
+                            <p class="summary-item-meta">
+                                Weight: <%= item.weight == "1000" ? "1kg" : item.weight + "g" %>
+                            </p>
+
+                            <p class="summary-item-meta">Qty: <%= item.quantity %></p>
+
+                        </div>
+
+                        <div class="summary-item-price">
+                            ₹<%= item.product.prices[item.weight] * item.quantity %>
+                        </div>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT: PRICE SUMMARY -->
+        <div class="col-lg-4">
+
+            <p class="summary-section-label">Price Summary</p>
+
+            <div class="summary-box">
+
+                <h4 class="summary-title">Order Details</h4>
+
+                <hr>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>₹<%= subtotal %></span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span>
+                        <% if(deliveryCharge === 0){ %>
+                            <span class="free-delivery-tag">FREE</span>
+                        <% } else { %>
+                            ₹<%= deliveryCharge %>
+                        <% } %>
+                    </span>
+                </div>
+
+                <hr>
+
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span>₹<%= total %></span>
+                </div>
+
+                <% if(subtotal < freeDeliveryThreshold && subtotal > 0){ %>
+                    <p class="free-delivery-msg">
+                        Add ₹<%= freeDeliveryThreshold - subtotal %> more for free delivery
+                    </p>
+                <% } %>
+
+                <form action="/checkout/paymentPage" method="get">
+
+                <input
+                    type="hidden"
+                    name="addressId"
+                    value="<%= address._id %>">
+                  <% if(isBuyNow){ %>
+                        <input type="hidden" name="mode" value="buynow">
+                    <% } %>
+                <button class="checkout-btn mt-4">
+
+                    Continue
+
+                </button>
+
+            </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,0 +1,379 @@
+<section class="container-fluid product-page">
+
+  <div class="row">
+
+    <!-- SIDEBAR -->
+    <div class="col-12 col-lg-3 mb-4 d-none d-lg-block">
+      <div class="filter-sidebar mt-3">
+
+        <!-- CATEGORY -->
+        <div class="filter-section">
+
+            <h4 class="filter-title">Category</h4>
+
+            <a href="/products<%= query.price ? '?price=' + query.price : '' %>"
+                class="filter-btn <%= !query.category ? 'active' : '' %>">
+                All Products
+            </a>
+
+            <a  href="/products?category=whole<%= query.price ? '&price=' + query.price : '' %>"
+                class="filter-btn <%= query.category === 'whole' ? 'active' : '' %>">
+                Whole Cashews
+            </a>
+
+            <a href="/products?category=flavored<%= query.price ? '&price=' + query.price : '' %>"
+                class="filter-btn <%= query.category === 'flavored' ? 'active' : '' %>">
+                Flavored
+            </a>
+
+        </div>
+
+        <!-- PRICE -->
+        <div class="filter-section mt-5">
+          <h4 class="filter-title">Price Range</h4>
+
+          <a href="/products<%= query.category ? '?category=' + query.category : '' %>"
+            class="filter-btn <%= !query.price ? 'active' : '' %>">
+            All Prices
+          </a>
+
+          <a href="/products?price=under200<%= query.category ? '&category=' + query.category : '' %>"
+             class="filter-btn <%= query.price === 'under200' ? 'active' : '' %>">
+            Under ₹200
+          </a>
+
+          <a href="/products?price=200to300<%= query.category ? '&category=' + query.category : '' %>"
+          class="filter-btn <%= query.price === '200to300' ? 'active' : '' %>">
+            ₹200 - ₹300
+          </a>
+
+          <a href="/products?price=above300<%= query.category ? '&category=' + query.category : '' %>"
+          class="filter-btn <%= query.price === 'above300' ? 'active' : '' %>">
+            Above ₹300
+          </a>
+        </div>
+        <!--sort-->
+        <div class="filter-section mt-5">
+
+          <h4 class="filter-title">Sort By</h4>
+
+          <a
+            href="/products?sort=lowtohigh<%= query.category ? '&category=' + query.category : '' %><%= query.price ? '&price=' + query.price : '' %><%= query.search ? '&search=' + query.search : '' %>"
+            class="filter-btn <%= query.sort === 'lowtohigh' ? 'active' : '' %>">
+
+            Price: Low to High
+
+          </a>
+
+          <a
+            href="/products?sort=hightolow<%= query.category ? '&category=' + query.category : '' %><%= query.price ? '&price=' + query.price : '' %><%= query.search ? '&search=' + query.search : '' %>"
+            class="filter-btn <%= query.sort === 'hightolow' ? 'active' : '' %>">
+
+            Price: High to Low
+
+          </a>
+
+          <a
+            href="/products?sort=newest<%= query.category ? '&category=' + query.category : '' %><%= query.price ? '&price=' + query.price : '' %><%= query.search ? '&search=' + query.search : '' %>"
+            class="filter-btn <%= query.sort === 'newest' ? 'active' : '' %>">
+
+            Newest First
+
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+  <div class="d-lg-none mb-4">
+  <button
+    class="mobile-filter-btn"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#mobileFilters">
+
+    <i class="fa-solid fa-sliders"></i>
+    Filters
+
+  </button>
+  <div
+  class="offcanvas offcanvas-start"
+  tabindex="-1"
+  id="mobileFilters">
+
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Filters</h5>
+
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas">
+    </button>
+  </div>
+
+  <div class="offcanvas-body">
+
+    <!-- CATEGORY -->
+    <div class="filter-section">
+
+  <h4 class="filter-title">Category</h4>
+
+  <a href="/products<%= query.price ? '?price=' + query.price : '' %>"
+     class="filter-btn <%= !query.category ? 'active' : '' %>">
+     All Products
+  </a>
+
+  <a href="/products?category=whole<%= query.price ? '&price=' + query.price : '' %>"
+     class="filter-btn <%= query.category === 'whole' ? 'active' : '' %>">
+     Whole Cashews
+  </a>
+
+  <a href="/products?category=flavored<%= query.price ? '&price=' + query.price : '' %>"
+     class="filter-btn <%= query.category === 'flavored' ? 'active' : '' %>">
+     Flavored
+  </a>
+
+</div>
+
+    <!-- PRICE -->
+    <div class="filter-section mt-5">
+
+  <h4 class="filter-title">Price Range</h4>
+
+  <a href="/products?price=under200<%= query.category ? '&category=' + query.category : '' %>"
+     class="filter-btn <%= query.price === 'under200' ? 'active' : '' %>">
+     Under ₹200
+  </a>
+
+  <a href="/products?price=200to300<%= query.category ? '&category=' + query.category : '' %>"
+     class="filter-btn <%= query.price === '200to300' ? 'active' : '' %>">
+     ₹200 - ₹300
+  </a>
+
+  <a href="/products?price=above300<%= query.category ? '&category=' + query.category : '' %>"
+     class="filter-btn <%= query.price === 'above300' ? 'active' : '' %>">
+     Above ₹300
+  </a>
+
+    </div>
+    <!--sort-->
+    <div class="filter-section mt-5">
+
+      <h4 class="filter-title">Sort By</h4>
+
+      <a
+        href="/products?sort=lowtohigh<%= query.category ? '&category=' + query.category : '' %><%= query.price ? '&price=' + query.price : '' %><%= query.search ? '&search=' + query.search : '' %>"
+        class="filter-btn <%= query.sort === 'lowtohigh' ? 'active' : '' %>">
+
+        Price: Low to High
+
+      </a>
+
+      <a
+        href="/products?sort=hightolow<%= query.category ? '&category=' + query.category : '' %><%= query.price ? '&price=' + query.price : '' %><%= query.search ? '&search=' + query.search : '' %>"
+        class="filter-btn <%= query.sort === 'hightolow' ? 'active' : '' %>">
+
+        Price: High to Low
+
+      </a>
+
+      <a
+        href="/products?sort=newest<%= query.category ? '&category=' + query.category : '' %><%= query.price ? '&price=' + query.price : '' %><%= query.search ? '&search=' + query.search : '' %>"
+        class="filter-btn <%= query.sort === 'newest' ? 'active' : '' %>">
+
+        Newest First
+
+      </a>
+
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+
+    <!-- PRODUCT GRID -->
+<div class="col-12 col-lg-9">
+
+      <div class="row g-4 mt-3" >
+
+    <!--search bar -->
+     <form action="/products" method="GET" class="search-form mb-4">
+
+        <!-- PRESERVE FILTERS -->
+        <% if(query.category){ %>
+            <input type="hidden" name="category" value="<%= query.category %>">
+        <% } %>
+
+        <% if(query.price){ %>
+            <input type="hidden" name="price" value="<%= query.price %>">
+        <% } %>
+
+        <div class="search-box">
+
+            <input
+            type="text"
+            name="search"
+            placeholder="Search cashews..."
+            value="<%= query.search || '' %>"
+            class="search-input">
+
+            <button type="submit" class="search-btn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+        </div>
+
+    </form>
+
+
+     <% for (let product of products) { %>
+
+    <div class="col-12 col-sm-6 col-xl-4">
+
+        <div class="card h-100">
+
+            <!-- IMAGE LINK -->
+            <a href="/products/<%= product._id %>" class="product-link">
+
+                <div class="product-img-wrapper">
+
+                    <img
+                        src="<%= product.image %>"
+                        class="card-img-top product-img"
+                        alt="<%= product.name %>">
+
+                    <!-- WISHLIST BUTTON INSIDE WRAPPER -->
+                    <button
+                        class="wishlist-btn <%= wishlistIds.includes(product._id.toString()) ? 'active' : '' %>"
+                        data-product-id="<%= product._id %>"
+                        onclick="event.preventDefault(); toggleWishlist(this)">
+                        <i class="<%= wishlistIds.includes(product._id.toString()) ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
+                    </button>
+
+                </div>
+
+            </a>
+            <div class="card-body d-flex flex-column">
+
+              <!-- TITLE LINK -->
+              <a
+                href="/products/<%= product._id %>"
+                class="product-link">
+
+                <h5 class="card-title headlines-card">
+                  <%= product.name %>
+                </h5>
+
+              </a>
+
+              <p class="card-text">
+                <%= product.description %>
+              </p>
+
+              <!-- WEIGHT -->
+              <div class="weight-options mb-3">
+
+                <% Object.keys(product.prices).forEach(function(weight,index) { %>
+
+                 <button
+                    class="weight-btn <%= index === 0 ? 'active' : '' %>"
+                    data-product-id="<%= product._id %>"
+                    data-price="<%= product.prices[weight] %>"
+                    data-weight="<%= weight %>">
+
+                    <%= weight == 1000 ? '1kg' : weight + 'g' %>
+
+                </button>
+
+                <% }) %>
+
+              </div>
+
+              <!-- PRICE -->
+              <div class="price-row mt-auto d-flex justify-content-between align-items-center">
+
+                  <span
+                      id="price-<%= product._id %>"
+                      class="price">
+                      ₹<%= Object.values(product.prices)[0] %>
+                  </span>
+
+                  <form action="/cart/add" method="POST" class="add-to-cart-form">
+                      <input type="hidden" name="productId" value="<%= product._id %>">
+                      <input type="hidden" name="weight" id="weight-<%= product._id %>" value="<%= Object.keys(product.prices)[0] %>">
+                      <input type="hidden" name="quantity" id="selectedQuantity" value="1">
+                      <input type="hidden" name="redirectUrl" value="/products">
+                      <button type="submit" class="add-btn">
+                          <i class="fa-solid fa-cart-shopping"></i> Add
+                      </button>
+                  </form>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      <% } %>     
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Weight button selection
+    document.querySelectorAll(".weight-options").forEach(group => {
+        group.querySelectorAll(".weight-btn").forEach(button => {
+            button.addEventListener("click", function () {
+
+                const productId = this.dataset.productId;
+                const price = this.dataset.price;
+                const weight = this.dataset.weight;
+
+                group.querySelectorAll(".weight-btn").forEach(btn => {
+                    btn.classList.remove("active");
+                });
+
+                this.classList.add("active");
+
+                // Update price display
+                const priceEl = document.getElementById("price-" + productId);
+                if (priceEl) priceEl.innerText = "₹" + price;
+
+                // Update hidden weight input in the form
+                const weightInput = document.getElementById("weight-" + productId);
+                if (weightInput) weightInput.value = weight;
+
+            });
+        });
+    });
+
+    // Toast popup on redirect
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("added") === "true") {
+        showToast("Item added to cart!");
+        // Clean URL without reloading
+        window.history.replaceState({}, "", window.location.pathname);
+    }
+
+});
+
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "cart-toast";
+    toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${message}`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add("cart-toast-show"), 10);
+    setTimeout(() => {
+        toast.classList.remove("cart-toast-show");
+        setTimeout(() => toast.remove(), 400);
+    }, 2500);
+}
+</script>

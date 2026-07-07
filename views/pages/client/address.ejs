@@ -1,0 +1,292 @@
+<section class="container my-5">
+
+    <!-- PROGRESS -->
+    <div class="checkout-progress mb-5">
+
+        <div class="cp-step active">
+            <div class="cp-circle">1</div>
+            <span class="cp-label">Address</span>
+        </div>
+
+        <div class="cp-connector"></div>
+
+        <div class="cp-step">
+            <div class="cp-circle">2</div>
+            <span class="cp-label">Order Summary</span>
+        </div>
+
+        <div class="cp-connector"></div>
+
+        <div class="cp-step">
+            <div class="cp-circle">3</div>
+            <span class="cp-label">Confirmation</span>
+        </div>
+
+    </div>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+
+    <h1 class="mb-0">
+
+        Delivery Address
+
+    </h1>
+
+    <button
+        id="showAddressForm"
+        class="add-address-btn">
+
+        + Add New Address
+
+    </button>
+
+</div>
+
+    <!-- SAVED ADDRESSES -->
+
+    <% if(addresses.length > 0){ %>
+
+        <form action="/checkout/summary" method="GET">
+
+            <% addresses.forEach(address=>{ %>
+
+                <label class="address-card">
+
+                    <input
+                        type="radio"
+                        name="addressId"
+                        value="<%= address._id %>"
+                        required>
+
+                    <div>
+
+                        <h5>
+
+                            <%= address.fullName %>
+
+                        </h5>
+
+                        <p>
+
+                            <%= address.house %>,
+                            <%= address.city %>,
+                            <%= address.district %>,
+                            <%= address.state %>
+                            -
+                            <%= address.pincode %>
+
+                        </p>
+
+                        <p>
+
+                            Phone:
+                            <%= address.phone %>
+
+                        </p>
+
+                    </div>
+
+                </label>
+
+            <% }) %>
+            <% if(isBuyNow){ %>
+                <input type="hidden" name="mode" value="buynow">
+            <% } %>
+            <button
+                class="checkout-btn mt-4">
+
+                Continue
+
+            </button>
+
+        </form>
+
+    <% } %>
+
+
+    <!-- ADD NEW ADDRESS -->
+    
+    
+
+
+    <div
+        class="address-form-container mt-4"
+        style="display:none;">
+
+        <form action="/checkout/address" method="POST">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <input
+                        type="text"
+                        name="fullName"
+                        class="form-control"
+                        placeholder="Full Name"
+                        required>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <input
+                        type="text"
+                        name="phone"
+                        class="form-control"
+                        placeholder="Phone Number"
+                        required>
+
+                </div>
+
+                <div class="col-12 mb-3">
+
+                    <input
+                        type="text"
+                        name="house"
+                        class="form-control"
+                        placeholder="House Name"
+                        required>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <input
+                        type="text"
+                        name="city"
+                        class="form-control"
+                        placeholder="City"
+                        required>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <input
+                        type="text"
+                        name="district"
+                        class="form-control"
+                        placeholder="District"
+                        required>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <input
+                        type="text"
+                        name="state"
+                        class="form-control"
+                        placeholder="State"
+                        required>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+
+                    <input
+                        type="text"
+                        name="pincode"
+                        class="form-control"
+                        placeholder="Pincode"
+                        required>
+
+                </div>
+
+                <div class="col-md-6 ">
+
+                    <label class="mb-3">
+
+                        Address Type
+
+                    </label>
+
+                    <div class="address-type-buttons">
+
+                        <input
+                            type="radio"
+                            name="addressType"
+                            value="Home"
+                            id="home"
+                            checked>
+
+                        <label for="home">
+
+                            Home
+
+                        </label>
+
+
+                        <input
+                            type="radio"
+                            name="addressType"
+                            value="Work"
+                            id="work">
+
+                        <label for="work">
+
+                            Work
+
+                        </label>
+
+
+                        <input
+                            type="radio"
+                            name="addressType"
+                            value="Other"
+                            id="other">
+
+                        <label for="other">
+
+                            Other
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                class="checkout-btn mt-3">
+
+                Save Address
+
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+\<script>
+
+const btn =
+document.getElementById("showAddressForm");
+
+const form =
+document.querySelector(
+".address-form-container"
+);
+
+btn.addEventListener(
+"click",
+function(){
+
+    if(form.style.display==="none"){
+
+        form.style.display="block";
+
+    }
+    else{
+
+        form.style.display="none";
+
+    }
+
+});
+
+</script>

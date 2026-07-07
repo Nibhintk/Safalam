@@ -1,0 +1,82 @@
+
+
+<div class="acc-wrapper">
+
+    <%- include('../../partials/account-sidebar') %>
+
+    <main class="acc-main">
+
+        <div class="acc-page-header">
+            <h1 class="acc-page-title">My Orders</h1>
+            <p class="acc-page-sub"><%= orders.length %> order<%= orders.length !== 1 ? 's' : '' %> placed</p>
+        </div>
+
+        <% if(orders.length === 0){ %>
+
+            <div class="acc-empty">
+                <i class="fa-regular fa-bag-shopping" aria-hidden="true"></i>
+                <p>You haven't placed any orders yet</p>
+                <a href="/products" class="acc-empty-btn">Browse Products</a>
+            </div>
+
+        <% } else { %>
+
+            <div class="acc-orders-list">
+
+                <% orders.forEach(order => { %>
+
+                    <a href="/account/orders/<%= order._id %>" class="acc-order-card">
+
+                        <div class="acc-order-card-top">
+
+                            <div>
+                                <p class="acc-order-id">Order #<%= order._id.toString().slice(-6).toUpperCase() %></p>
+                                <p class="acc-order-date">
+                                    <%= new Date(order.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'}) %>
+                                </p>
+                            </div>
+
+                            <span class="acc-order-status acc-status-<%= order.orderStatus.toLowerCase() %>">
+                                <%= order.orderStatus %>
+                            </span>
+
+                        </div>
+
+                        <div class="acc-order-card-items">
+                            <% order.items.slice(0,2).forEach(item => { %>
+                                <div class="acc-order-item-preview">
+                                    <img src="<%= item.product.image %>" alt="<%= item.product.name %>">
+                                    <div>
+                                        <p class="acc-order-item-name"><%= item.product.name %></p>
+                                        <p class="acc-order-item-meta">
+                                            <%= item.weight == "1000" ? "1kg" : item.weight + "g" %> × <%= item.quantity %>
+                                        </p>
+                                    </div>
+                                </div>
+                            <% }) %>
+                            <% if(order.items.length > 2){ %>
+                                <p class="acc-order-more">+<%= order.items.length - 2 %> more item<%= order.items.length - 2 > 1 ? 's' : '' %></p>
+                            <% } %>
+                        </div>
+
+                        <div class="acc-order-card-footer">
+                            <div>
+                                <span class="acc-order-footer-label">Payment</span>
+                                <span class="acc-order-footer-val"><%= order.paymentMethod %> · <span class="acc-pay-<%= order.paymentStatus.toLowerCase() %>"><%= order.paymentStatus %></span></span>
+                            </div>
+                            <div class="acc-order-card-total">₹<%= order.total %></div>
+                        </div>
+
+                    </a>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+    </main>
+
+</div>
+
+

@@ -1,0 +1,196 @@
+<%- include('../../layout/admin-header') %>
+
+<div class="admin-wrapper">
+
+    <%- include('../partials/admin-sidebar', { activePage }) %>
+
+    <main class="admin-main">
+
+        <div class="admin-page-header">
+            <h1 class="admin-page-title">Reviews</h1>
+            <p class="admin-page-sub">Customer feedback across your catalog</p>
+        </div>
+
+        <!-- TOP STATS -->
+        <div class="admin-stats" style="margin-bottom:1.5rem;">
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-gold">
+                        <i class="fa-solid fa-star" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <p class="admin-stat-value"><%= totalReviews %></p>
+                <p class="admin-stat-label">Total Reviews</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-green">
+                        <i class="fa-solid fa-star-half-stroke" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <p class="admin-stat-value"><%= avgRatingAll %></p>
+                <p class="admin-stat-label">Overall Avg Rating</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <div class="admin-stat-top">
+                    <div class="admin-stat-icon admin-icon-gold">
+                        <i class="fa-solid fa-box" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <p class="admin-stat-value"><%= reviewsByProduct.length %></p>
+                <p class="admin-stat-label">Products Reviewed</p>
+            </div>
+
+        </div>
+
+        <div class="admin-reviews-page-grid">
+
+            <!-- LEFT: RECENT REVIEWS -->
+            <div>
+
+                <div class="admin-card">
+
+                    <h3 class="admin-card-title" style="margin-bottom:1.25rem;">Recent Reviews</h3>
+
+                    <% if(recentReviews.length === 0){ %>
+
+                        <p class="admin-empty-text">No reviews yet</p>
+
+                    <% } else { %>
+
+                        <div class="admin-recent-reviews-list">
+
+                            <% recentReviews.forEach(review => { %>
+
+                                <div class="admin-recent-review-item">
+
+                                    <div class="admin-recent-review-top">
+
+                                        <div class="admin-customer-avatar" style="width:36px;height:36px;font-size:14px;flex-shrink:0;">
+                                            <%= review.user ? review.user.name.charAt(0).toUpperCase() : '?' %>
+                                        </div>
+
+                                        <div style="flex:1;min-width:0;">
+                                            <p class="admin-review-reviewer-name">
+                                                <%= review.user ? review.user.name : 'Unknown' %>
+                                            </p>
+                                            <p class="admin-review-reviewer-email">
+                                                <%= review.user ? review.user.email : '' %>
+                                            </p>
+                                        </div>
+
+                                        <div style="text-align:right;flex-shrink:0;">
+                                            <div class="admin-review-stars-sm">
+                                                <% for(let i = 1; i <= 5; i++){ %>
+                                                    <i class="fa-<%= i <= review.rating ? 'solid' : 'regular' %> fa-star" aria-hidden="true"></i>
+                                                <% } %>
+                                            </div>
+                                            <p class="admin-review-date">
+                                                <%= new Date(review.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'short'}) %>
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    <% if(review.product){ %>
+                                        <div class="admin-recent-review-product">
+                                            <img src="<%= review.product.image %>" alt="">
+                                            <span><%= review.product.name %></span>
+                                        </div>
+                                    <% } %>
+
+                                    <p class="admin-recent-review-comment">"<%= review.comment %>"</p>
+
+                                    <form action="/admin/reviews/<%= review._id %>/delete" method="POST" style="margin-top:8px;">
+                                        <button
+                                            type="submit"
+                                            class="admin-review-delete-btn"
+                                            onclick="return confirm('Delete this review?')">
+                                            <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                                            Delete
+                                        </button>
+                                    </form>
+
+                                </div>
+
+                            <% }) %>
+
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT: REVIEWS BY PRODUCT -->
+            <div>
+
+                <div class="admin-card">
+
+                    <h3 class="admin-card-title" style="margin-bottom:1.25rem;">By Product</h3>
+
+                    <% if(reviewsByProduct.length === 0){ %>
+
+                        <p class="admin-empty-text">No reviews yet</p>
+
+                    <% } else { %>
+
+                        <div class="admin-product-reviews-list">
+
+                            <% reviewsByProduct.forEach(r => { %>
+
+                                <div class="admin-product-review-item">
+
+                                    <div class="admin-product-review-header">
+
+                                        <img src="<%= r.product.image %>" alt="<%= r.product.name %>" class="admin-product-review-img">
+
+                                        <div style="flex:1;min-width:0;">
+                                            <p class="admin-product-review-name"><%= r.product.name %></p>
+                                            <div class="admin-review-stars-sm" style="margin:3px 0;">
+                                                <% for(let i = 1; i <= 5; i++){ %>
+                                                    <i class="fa-<%= i <= Math.round(r.avgRating) ? 'solid' : 'regular' %> fa-star" aria-hidden="true"></i>
+                                                <% } %>
+                                                <span class="admin-product-review-score"><%= r.avgRating.toFixed(1) %></span>
+                                            </div>
+                                            <p class="admin-review-date"><%= r.totalReviews %> review<%= r.totalReviews !== 1 ? 's' : '' %></p>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- STAR DISTRIBUTION BAR -->
+                                    <div class="admin-rating-distribution">
+                                        <% r.distribution.forEach(d => { %>
+                                            <div class="admin-dist-row">
+                                                <span class="admin-dist-label"><%= d.star %> <i class="fa-solid fa-star" aria-hidden="true"></i></span>
+                                                <div class="admin-dist-bar-bg">
+                                                    <div class="admin-dist-bar-fill" style="width:<%= d.percent %>%"></div>
+                                                </div>
+                                                <span class="admin-dist-count"><%= d.count %></span>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+
+                                </div>
+
+                            <% }) %>
+
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<%- include('../../layout/admin-footer') %>

@@ -1,0 +1,395 @@
+<section class="contact-hero">
+    <div class="contact-hero-inner">
+        <p class="contact-eyebrow">Get in touch</p>
+        <h1 class="contact-title">Contact Us</h1>
+        <p class="contact-subtitle">We'd love to hear from you. Reach out for orders, queries, or just to say hello.</p>
+    </div>
+</section>
+
+<section class="contact-main container">
+
+    <div class="contact-grid">
+
+        <!-- LEFT: FORM -->
+        <div class="contact-form-card">
+
+            <h2 class="contact-card-title">Send us a message</h2>
+            <p class="contact-card-sub">We'll get back to you within 24 hours.</p>
+
+            <form class="contact-form" action="/contact" method="POST">
+
+                <div class="contact-form-row">
+
+                    <div class="contact-form-group">
+                        <label class="contact-label">Your Name</label>
+                        <input type="text" name="name" class="contact-input" placeholder="Nibhin T K" required>
+                    </div>
+
+                    <div class="contact-form-group">
+                        <label class="contact-label">Email Address</label>
+                        <input type="email" name="email" class="contact-input" placeholder="you@email.com" required>
+                    </div>
+
+                </div>
+
+                <div class="contact-form-group">
+                    <label class="contact-label">Subject</label>
+                    <input type="text" name="subject" class="contact-input" placeholder="Order query, feedback...">
+                </div>
+
+                <div class="contact-form-group">
+                    <label class="contact-label">Message</label>
+                    <textarea name="message" class="contact-textarea" rows="5" placeholder="Write your message here..." required></textarea>
+                </div>
+
+                <button type="submit" class="contact-submit-btn">
+                    <i class="fa-regular fa-paper-plane" aria-hidden="true"></i>
+                    Send Message
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- RIGHT: INFO -->
+        <div class="contact-info-col">
+
+            <div class="contact-info-card">
+
+                <h3 class="contact-info-title">Contact Us</h3>
+
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">
+                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="contact-info-label">Address</p>
+                        <p class="contact-info-value">Kasaragod, Kerala, India</p>
+                    </div>
+                </div>
+
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="contact-info-label">Phone</p>
+                        <p class="contact-info-value">+91 98765 43210</p>
+                    </div>
+                </div>
+
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">
+                        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="contact-info-label">Email</p>
+                        <p class="contact-info-value">support@safalam.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">
+                        <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <p class="contact-info-label">Business Hours</p>
+                        <p class="contact-info-value">Mon – Sat: 9am – 6pm</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SOCIAL -->
+            <div class="contact-social-card">
+                <p class="contact-social-title">Follow us</p>
+                <div class="contact-social-links">
+                    <a href="#" class="contact-social-btn">
+                        <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="contact-social-btn">
+                        <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                    </a>
+                    <a href="#" class="contact-social-btn">
+                        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<style>
+
+.contact-hero {
+    background: #0D3D28;
+    padding: 5rem 1rem 4rem;
+    text-align: center;
+}
+
+.contact-hero-inner {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact-eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #D4A017;
+    margin: 0 0 12px;
+}
+
+.contact-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 16px;
+}
+
+.contact-subtitle {
+    font-size: 16px;
+    color: #a8c4b5;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.contact-main {
+    padding-top: 4rem;
+    padding-bottom: 5rem;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* FORM CARD */
+.contact-form-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 2.5rem;
+}
+
+.contact-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0D3D28;
+    margin: 0 0 4px;
+}
+
+.contact-card-sub {
+    font-size: 14px;
+    color: #aaa;
+    margin: 0 0 2rem;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.contact-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.contact-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.contact-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+}
+
+.contact-input,
+.contact-textarea {
+    border: 1px solid #e5e0d0;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #1a1a1a;
+    background: #fdfcf8;
+    outline: none;
+    transition: border-color 0.15s;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.contact-input:focus,
+.contact-textarea:focus {
+    border-color: #0D3D28;
+    background: #fff;
+}
+
+.contact-textarea {
+    resize: vertical;
+}
+
+.contact-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.85rem 2rem;
+    background: #0D3D28;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    align-self: flex-start;
+}
+
+.contact-submit-btn:hover {
+    background: #0b3322;
+}
+
+/* INFO CARD */
+.contact-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.contact-info-card {
+    background: #0D3D28;
+    border-radius: 18px;
+    padding: 2rem;
+}
+
+.contact-info-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 1.5rem;
+}
+
+.contact-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 1.25rem;
+}
+
+.contact-info-item:last-child {
+    margin-bottom: 0;
+}
+
+.contact-info-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: #D4A017;
+    flex-shrink: 0;
+}
+
+.contact-info-label {
+    font-size: 12px;
+    color: #a8c4b5;
+    margin: 0 0 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.contact-info-value {
+    font-size: 14.5px;
+    color: #fff;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* SOCIAL */
+.contact-social-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.contact-social-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.contact-social-links {
+    display: flex;
+    gap: 10px;
+}
+
+.contact-social-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f0f8f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    color: #0D3D28;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+}
+
+.contact-social-btn:hover {
+    background: #0D3D28;
+    color: #fff;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-title {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 576px) {
+    .contact-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-form-card {
+        padding: 1.5rem;
+    }
+
+    .contact-title {
+        font-size: 28px;
+    }
+
+    .contact-submit-btn {
+        width: 100%;
+    }
+}
+</style>

@@ -1,0 +1,115 @@
+
+
+<div class="acc-wrapper">
+
+    <%- include('../../partials/account-sidebar') %>
+
+    <main class="acc-main">
+
+        <div class="acc-page-header">
+            <h1 class="acc-page-title">My Profile</h1>
+            <p class="acc-page-sub">Manage your personal information</p>
+        </div>
+
+        <!-- ALERTS -->
+        <% if(success){ %>
+            <div class="acc-alert acc-alert-success">
+                <i class="fa-regular fa-circle-check" aria-hidden="true"></i>
+                <%= success %>
+            </div>
+        <% } %>
+        <% if(error){ %>
+            <div class="acc-alert acc-alert-error">
+                <i class="fa-regular fa-circle-xmark" aria-hidden="true"></i>
+                <%= error %>
+            </div>
+        <% } %>
+
+        <!-- PROFILE FORM -->
+        <div class="acc-card">
+
+            <div class="acc-card-header">
+                <div class="acc-avatar acc-avatar-lg">
+                    <%= user.name.charAt(0).toUpperCase() %>
+                </div>
+                <div>
+                    <p class="acc-card-title"><%= user.name %></p>
+                    <p class="acc-card-sub">Member since <%= new Date(user.createdAt).toLocaleDateString('en-IN', {month:'long', year:'numeric'}) %></p>
+                </div>
+            </div>
+
+            <form action="/account/profile" method="POST" class="acc-form">
+
+                <div class="acc-form-group">
+                    <label class="acc-label">Full name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        class="acc-input"
+                        value="<%= user.name %>"
+                        required>
+                </div>
+
+                <div class="acc-form-group">
+                    <label class="acc-label">Email address</label>
+                    <input
+                        type="email"
+                        class="acc-input acc-input-disabled"
+                        value="<%= user.email %>"
+                        disabled>
+                    <p class="acc-hint">Email cannot be changed</p>
+                </div>
+
+                <div class="acc-form-group">
+                    <label class="acc-label">Phone number</label>
+                    <input
+                        type="tel"
+                        name="phone"
+                        class="acc-input"
+                        value="<%= user.phone || '' %>"
+                        placeholder="Enter phone number">
+                </div>
+
+                <button type="submit" class="acc-btn-primary">Save changes</button>
+
+            </form>
+
+        </div>
+
+        <!-- CHANGE PASSWORD -->
+        <div class="acc-card" id="change-password" style="margin-top:1.5rem;">
+
+            <p class="acc-card-title" style="margin-bottom:1.5rem;">Change Password</p>
+
+            <form action="/account/profile/change-password" method="POST" class="acc-form">
+
+                <div class="acc-form-group">
+                    <label class="acc-label">Current password</label>
+                    <input type="password" name="currentPassword" class="acc-input" required placeholder="Enter current password">
+                </div>
+
+                <div class="acc-form-row">
+
+                    <div class="acc-form-group">
+                        <label class="acc-label">New password</label>
+                        <input type="password" name="newPassword" class="acc-input" required placeholder="Min. 6 characters">
+                    </div>
+
+                    <div class="acc-form-group">
+                        <label class="acc-label">Confirm new password</label>
+                        <input type="password" name="confirmPassword" class="acc-input" required placeholder="Repeat new password">
+                    </div>
+
+                </div>
+
+                <button type="submit" class="acc-btn-secondary">Update password</button>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+

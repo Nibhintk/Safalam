@@ -1,0 +1,156 @@
+<%- include('../../layout/admin-header') %>
+
+<div class="admin-wrapper">
+
+    <%- include('../partials/admin-sidebar', { activePage }) %>
+
+    <main class="admin-main">
+
+        <a href="/admin/orders" class="admin-back-link">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Back to orders
+        </a>
+
+        <div class="admin-page-header admin-page-header-row">
+
+            <div>
+                <h1 class="admin-page-title admin-order-detail-title">
+                    Order #<%= order._id.toString().slice(-8).toUpperCase() %>
+                </h1>
+                <p class="admin-page-sub">
+                    Placed on <%= new Date(order.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'numeric', year:'numeric'}) %>,
+                    <%= new Date(order.createdAt).toLocaleTimeString('en-IN', {hour:'numeric', minute:'2-digit', hour12:true}) %>
+                </p>
+            </div>
+
+            <div class="admin-header-actions">
+                <span class="admin-status-badge admin-status-<%= order.orderStatus.toLowerCase() %> admin-status-badge-lg">
+                    <%= order.orderStatus.toLowerCase() %>
+                </span>
+
+                <button class="admin-reset-btn" onclick="window.print()">
+                    <i class="fa-solid fa-print" aria-hidden="true"></i>
+                    Print
+                </button>
+            </div>
+
+        </div>
+
+        <!-- UPDATE STATUS -->
+        <div class="admin-card admin-status-update-card">
+
+            <h3 class="admin-card-title">Update Status</h3>
+
+            <form action="/admin/orders/<%= order._id %>/status" method="POST" class="admin-status-form">
+
+                <div class="admin-status-buttons">
+
+                    <% const statuses = ['Placed', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled']; %>
+
+                    <% statuses.forEach(s => { %>
+                        <button
+                            type="submit"
+                            name="status"
+                            value="<%= s %>"
+                            class="admin-status-option <%= order.orderStatus === s ? 'admin-status-option-active' : '' %>">
+                            <%= s %>
+                        </button>
+                    <% }) %>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- CUSTOMER + ADDRESS -->
+        <div class="admin-grid-2col">
+
+            <div class="admin-card">
+                <h3 class="admin-card-title">Customer</h3>
+                <p class="admin-detail-name"><%= order.user ? order.user.name : 'Unknown' %></p>
+                <p class="admin-detail-line"><%= order.user ? order.user.email : '' %></p>
+                <% if(order.user && order.user.phone){ %>
+                    <p class="admin-detail-line"><%= order.user.phone %></p>
+                <% } %>
+            </div>
+
+            <div class="admin-card">
+                <h3 class="admin-card-title">Delivery Address</h3>
+                <% if(order.address){ %>
+                    <p class="admin-detail-line"><%= order.address.house %>, <%= order.address.city %></p>
+                    <p class="admin-detail-line"><%= order.address.district %>, <%= order.address.state %> <%= order.address.pincode %></p>
+                    <p class="admin-detail-line">India</p>
+                    <p class="admin-detail-line">📞 <%= order.address.phone %></p>
+                <% } else { %>
+                    <p class="admin-detail-line admin-cell-muted">Address not available</p>
+                <% } %>
+            </div>
+
+        </div>
+
+        <!-- ITEMS -->
+        <div class="admin-card">
+
+            <h3 class="admin-card-title">Items</h3>
+
+            <% order.items.forEach(item => { %>
+
+                <div class="admin-order-item-row">
+
+                    <img src="<%= item.product.image %>" alt="<%= item.product.name %>" class="admin-order-item-img">
+
+                    <div class="admin-order-item-info">
+                        <p class="admin-detail-name"><%= item.product.name %></p>
+                        <p class="admin-cell-muted">
+                            <%= item.weight == "1000" ? "1kg" : item.weight + "g" %> • Qty <%= item.quantity %>
+                        </p>
+                    </div>
+
+                    <p class="admin-cell-price">₹<%= item.price * item.quantity %></p>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="admin-card">
+
+            <h3 class="admin-card-title">Payment</h3>
+
+            <div class="admin-payment-row">
+                <span class="admin-cell-muted">Method</span>
+                <span class="admin-detail-name"><%= order.paymentMethod %></span>
+            </div>
+
+            <div class="admin-payment-row">
+                <span class="admin-cell-muted">Subtotal</span>
+                <span class="admin-detail-name">₹<%= order.subtotal %></span>
+            </div>
+
+            <div class="admin-payment-row">
+                <span class="admin-cell-muted">Delivery</span>
+                <span class="admin-detail-name"><%= order.deliveryCharge === 0 ? 'FREE' : '₹' + order.deliveryCharge %></span>
+            </div>
+
+            <hr class="admin-divider">
+
+            <div class="admin-payment-row">
+                <span class="admin-card-title" style="font-size:16px;">Total</span>
+                <span class="admin-card-title" style="font-size:16px;">₹<%= order.total %></span>
+            </div>
+
+            <div class="admin-payment-row" style="margin-top:10px;">
+                <span class="admin-cell-muted">Payment Status</span>
+                <span class="admin-pay-<%= order.paymentStatus.toLowerCase() %>"><%= order.paymentStatus %></span>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<%- include('../../layout/admin-footer') %>

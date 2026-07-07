@@ -1,0 +1,62 @@
+<%
+/*
+  Partial: account/sidebar
+  Include in every account page: 
+  Requires: user, activePage
+*/
+%>
+
+<div class="acc-sidebar">
+
+    <div class="acc-sidebar-user">
+        <div class="acc-avatar">
+            <%= user.name.charAt(0).toUpperCase() %>
+        </div>
+        <div>
+            <p class="acc-sidebar-name"><%= user.name %></p>
+            <p class="acc-sidebar-email"><%= user.email %></p>
+        </div>
+    </div>
+
+    <nav class="acc-nav">
+
+        <a href="/account"
+            class="acc-nav-item <%= activePage === 'dashboard' ? 'acc-nav-active' : '' %>">
+            <i class="fa-solid fa-house" aria-hidden="true"></i>
+            Dashboard
+        </a>
+
+        <a href="/account/profile"
+            class="acc-nav-item <%= activePage === 'profile' ? 'acc-nav-active' : '' %>">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            My Profile
+        </a>
+
+        <a href="/account/orders"
+            class="acc-nav-item <%= activePage === 'orders' ? 'acc-nav-active' : '' %>">
+            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            My Orders
+        </a>
+
+        <a href="/account/addresses"
+            class="acc-nav-item <%= activePage === 'addresses' ? 'acc-nav-active' : '' %>">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            Addresses
+        </a>
+        <a href="/account/wishlist"
+            class="acc-nav-item <%= activePage === 'wishlist' ? 'acc-nav-active' : '' %>">
+            <i class="fa-regular fa-heart" aria-hidden="true"></i>
+            Wishlist
+        </a>
+
+    </nav>
+<div class="acc-nav-footer"> 
+    <form action="/logout" method="get"> 
+        <button class="acc-logout-btn"> 
+            <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i> Logout 
+        </button> 
+    </form> 
+</div>
+    
+
+</div>

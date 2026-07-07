@@ -1,0 +1,95 @@
+<%- include('../../layout/admin-header') %>
+
+<div class="admin-wrapper">
+
+    <%- include('../partials/admin-sidebar', { activePage }) %>
+
+    <main class="admin-main">
+
+        <div class="admin-page-header">
+            <h1 class="admin-page-title">Customers</h1>
+            <p class="admin-page-sub"><%= totalCustomers %> unique customer<%= totalCustomers !== 1 ? 's' : '' %></p>
+        </div>
+
+        <!-- SEARCH -->
+        <form action="/admin/customers" method="GET" class="admin-search-form">
+            <div class="admin-search-box">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search customers..."
+                    value="<%= search %>"
+                    class="admin-search-input">
+            </div>
+        </form>
+
+        <!-- CUSTOMER CARDS -->
+        <% if(customersData.length === 0){ %>
+
+            <p class="admin-empty-text">No customers found</p>
+
+        <% } else { %>
+
+            <div class="admin-customers-grid">
+
+                <% customersData.forEach(c => { %>
+
+                    <a href="/admin/customers/<%= c.user._id %>" class="admin-customer-card">
+
+                        <div class="admin-customer-card-top">
+
+                            <div class="admin-customer-avatar">
+                                <%= c.user.name.charAt(0).toUpperCase() %>
+                            </div>
+
+                            <div class="admin-customer-info">
+                                <p class="admin-customer-card-name"><%= c.user.name %></p>
+                                <p class="admin-customer-card-email"><%= c.user.email %></p>
+                            </div>
+
+                        </div>
+
+                        <% if(c.user.phone || c.district){ %>
+                            <div class="admin-customer-card-meta">
+                                <% if(c.user.phone){ %>
+                                    <span>
+                                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                                        <%= c.user.phone %>
+                                    </span>
+                                <% } %>
+                                <% if(c.district){ %>
+                                    <span>
+                                        <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                                        <%= c.district.toUpperCase() %>
+                                    </span>
+                                <% } %>
+                            </div>
+                        <% } %>
+
+                        <hr class="admin-customer-divider">
+
+                        <div class="admin-customer-card-stats">
+                            <div>
+                                <p class="admin-customer-stat-value"><%= c.orderCount %></p>
+                                <p class="admin-customer-stat-label">Orders</p>
+                            </div>
+                            <div style="text-align:right;">
+                                <p class="admin-customer-stat-value">₹<%= c.totalSpent.toLocaleString('en-IN') %></p>
+                                <p class="admin-customer-stat-label">Total spent</p>
+                            </div>
+                        </div>
+
+                    </a>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+    </main>
+
+</div>
+
+<%- include('../../layout/admin-footer') %>

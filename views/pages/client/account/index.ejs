@@ -1,0 +1,116 @@
+
+
+<div class="acc-wrapper">
+
+    <%- include('../../partials/account-sidebar') %>
+
+    <main class="acc-main">
+
+        <div class="acc-page-header">
+            <h1 class="acc-page-title">Welcome, <%= user.name.split(' ')[0] %> 👋</h1>
+            <p class="acc-page-sub">Here's a quick look at your account</p>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="acc-stats">
+
+            <div class="acc-stat-card">
+                <i class="fa-solid fa-bag-shopping acc-stat-icon" aria-hidden="true"></i>
+                <div>
+                    <p class="acc-stat-value"><%= orderCount %></p>
+                    <p class="acc-stat-label">Total Orders</p>
+                </div>
+            </div>
+
+            <div class="acc-stat-card">
+                <i class="fa-solid fa-location-dot acc-stat-icon" aria-hidden="true"></i>
+                <div>
+                    <p class="acc-stat-value"><%= addressCount %></p>
+                    <p class="acc-stat-label">Saved Addresses</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- QUICK LINKS -->
+        <div class="acc-section-title">Quick links</div>
+
+        <div class="acc-quick-links">
+
+            <a href="/account/profile" class="acc-quick-card">
+                <i class="fa-solid fa-user-pen" aria-hidden="true"></i>
+                <span>Edit Profile</span>
+            </a>
+
+            <a href="/account/orders" class="acc-quick-card">
+                <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+                <span>Order History</span>
+            </a>
+
+            <a href="/account/addresses/add" class="acc-quick-card">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                <span>Add Address</span>
+            </a>
+
+            <a href="/account/profile#change-password" class="acc-quick-card">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                <span>Change Password</span>
+            </a>
+
+        </div>
+
+        <!-- RECENT ORDERS -->
+        <% if(recentOrders.length > 0){ %>
+
+            <div class="acc-section-title" style="margin-top:2rem;">Recent orders</div>
+
+            <div class="acc-recent-orders">
+
+                <% recentOrders.forEach(order => { %>
+
+                    <a href="/account/orders/<%= order._id %>" class="acc-order-row">
+
+                        <div class="acc-order-meta">
+                            <p class="acc-order-id">#<%= order._id.toString().slice(-6).toUpperCase() %></p>
+                            <p class="acc-order-date">
+                                <%= new Date(order.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) %>
+                            </p>
+                        </div>
+
+                        <div class="acc-order-items-preview">
+                            <%= order.items.length %> item<%= order.items.length > 1 ? 's' : '' %>
+                        </div>
+
+                        <div>
+                            <span class="acc-order-status acc-status-<%= order.orderStatus.toLowerCase() %>">
+                                <%= order.orderStatus %>
+                            </span>
+                        </div>
+
+                        <div class="acc-order-total">₹<%= order.total %></div>
+
+                        <i class="fa-solid fa-chevron-right acc-order-arrow" aria-hidden="true"></i>
+
+                    </a>
+
+                <% }) %>
+
+            </div>
+
+            <a href="/account/orders" class="acc-view-all">View all orders →</a>
+
+        <% } else { %>
+
+            <div class="acc-empty">
+                <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                <p>No orders yet</p>
+                <a href="/products" class="acc-empty-btn">Start Shopping</a>
+            </div>
+
+        <% } %>
+
+    </main>
+
+</div>
+
+

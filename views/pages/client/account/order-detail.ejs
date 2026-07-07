@@ -1,0 +1,132 @@
+
+
+<div class="acc-wrapper">
+
+    <%- include('../../partials/account-sidebar') %>
+
+    <main class="acc-main">
+
+        <div class="acc-page-header">
+            <a href="/account/orders" class="acc-back-link">
+                <i class="fa-regular fa-arrow-left" aria-hidden="true"></i> Back to orders
+            </a>
+            <h1 class="acc-page-title">Order #<%= order._id.toString().slice(-6).toUpperCase() %></h1>
+            <p class="acc-page-sub">
+                Placed on <%= new Date(order.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'}) %>
+            </p>
+        </div>
+
+        <!-- STATUS TRACK -->
+        <div class="acc-card">
+
+            <div class="acc-status-track">
+
+                <% const steps = ['Pending','Confirmed','Shipped','Delivered']; %>
+                <% const currentIdx = steps.indexOf(order.orderStatus); %>
+                <% const isCancelled = order.orderStatus === 'Cancelled'; %>
+
+                <% if(isCancelled){ %>
+                    <div class="acc-cancelled-banner">
+                        <i class="fa-regular fa-circle-xmark" aria-hidden="true"></i>
+                        This order was cancelled
+                    </div>
+                <% } else { %>
+
+                    <% steps.forEach((step, i) => { %>
+                        <div class="acc-track-step <%= i <= currentIdx ? 'acc-track-done' : '' %>">
+                            <div class="acc-track-circle">
+                                <% if(i < currentIdx){ %>
+                                    <i class="fa-regular fa-check" aria-hidden="true"></i>
+                                <% } else { %>
+                                    <%= i + 1 %>
+                                <% } %>
+                            </div>
+                            <p class="acc-track-label"><%= step %></p>
+                        </div>
+                        <% if(i < steps.length - 1){ %>
+                            <div class="acc-track-line <%= i < currentIdx ? 'acc-track-line-done' : '' %>"></div>
+                        <% } %>
+                    <% }) %>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+        <div class="acc-detail-grid">
+
+            <!-- ITEMS -->
+            <div class="acc-card">
+
+                <p class="acc-card-title">Items ordered</p>
+
+                <% order.items.forEach(item => { %>
+
+                    <div class="acc-detail-item">
+                        <img src="<%= item.product.image %>" alt="<%= item.product.name %>" class="acc-detail-item-img">
+                        <div class="acc-detail-item-info">
+                            <p class="acc-order-item-name"><%= item.product.name %></p>
+                            <p class="acc-order-item-meta">
+                                <%= item.weight == "1000" ? "1kg" : item.weight + "g" %> × <%= item.quantity %>
+                            </p>
+                        </div>
+                        <p class="acc-detail-item-price">₹<%= item.price * item.quantity %></p>
+                    </div>
+
+                <% }) %>
+
+                <hr class="acc-divider">
+
+                <div class="acc-price-row"><span>Subtotal</span><span>₹<%= order.subtotal %></span></div>
+                <div class="acc-price-row"><span>Delivery</span><span><%= order.deliveryCharge === 0 ? 'FREE' : '₹' + order.deliveryCharge %></span></div>
+                <div class="acc-price-row acc-price-total"><span>Total</span><span>₹<%= order.total %></span></div>
+
+            </div>
+
+            <div>
+
+                <!-- DELIVERY ADDRESS -->
+                <div class="acc-card">
+                    <p class="acc-card-title">Delivery address</p>
+                    <% if(order.address){ %>
+                        <p class="acc-addr-name"><%= order.address.fullName %></p>
+                        <p class="acc-addr-line"><%= order.address.house %>, <%= order.address.city %></p>
+                        <p class="acc-addr-line"><%= order.address.district %>, <%= order.address.state %> - <%= order.address.pincode %></p>
+                        <p class="acc-addr-line">📞 <%= order.address.phone %></p>
+                    <% } else { %>
+                        <p class="acc-addr-line">Address not available</p>
+                    <% } %>
+                </div>
+
+                <!-- PAYMENT INFO -->
+                <div class="acc-card" style="margin-top:1rem;">
+                    <p class="acc-card-title">Payment</p>
+                    <div class="acc-price-row"><span>Method</span><span><%= order.paymentMethod %></span></div>
+                    <div class="acc-price-row">
+                        <span>Status</span>
+                        <span class="acc-pay-<%= order.paymentStatus.toLowerCase() %>"><%= order.paymentStatus %></span>
+                    </div>
+                </div>
+
+                <!-- CANCEL -->
+                <% if(order.orderStatus === 'Pending' || order.orderStatus === 'Confirmed'){ %>
+                    <form action="/account/orders/<%= order._id %>/cancel" method="POST" style="margin-top:1rem;">
+                        <button
+                            type="submit"
+                            class="acc-btn-danger"
+                            onclick="return confirm('Are you sure you want to cancel this order?')">
+                            Cancel Order
+                        </button>
+                    </form>
+                <% } %>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+

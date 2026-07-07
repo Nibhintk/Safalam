@@ -1,0 +1,103 @@
+<div class="container signup-page">
+
+    <div class="signup-card">
+        <% if(error && error.length){ %>
+
+            <div class="alert alert-danger">
+
+                <%= error[0] %>
+
+            </div>
+
+        <% } %>
+
+        <% if(success && success.length){ %>
+
+            <div class="alert alert-success">
+
+                <%= success[0] %>
+
+            </div>
+
+        <% } %>
+        <h1 class="signup-title">
+            Create Your Account
+        </h1>
+
+        <p class="signup-subtitle">
+            Join Safalam and enjoy premium cashews delivered fresh to your doorstep.
+        </p>
+
+        <form action="/signup" method="POST">
+
+            <!-- NAME -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    class="form-control signup-input"
+                    placeholder="Enter your name"
+                    required>
+
+            </div>
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    name="email"
+                    class="form-control signup-input"
+                    placeholder="Enter your email"
+                    required>
+
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control signup-input"
+                    placeholder="Create a password"
+                    required>
+
+            </div>
+
+            <button
+                type="submit"
+                class="signup-btn">
+
+                Create Account
+
+            </button>
+
+        </form>
+
+        <div class="signup-footer">
+
+            Already have an account?
+
+            <a href="/login">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

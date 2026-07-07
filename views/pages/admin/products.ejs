@@ -1,0 +1,301 @@
+<%- include('../../layout/admin-header') %>
+
+<div class="admin-wrapper">
+
+    <%- include('../partials/admin-sidebar', { activePage }) %>
+
+    <main class="admin-main">
+
+        <div class="admin-page-header admin-page-header-row">
+
+            <div>
+                <h1 class="admin-page-title">Products</h1>
+                <p class="admin-page-sub">Manage your catalog</p>
+            </div>
+
+            <div class="admin-header-actions">
+
+                <a href="/admin/products" class="admin-reset-btn">
+                    <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+                    Reset
+                </a>
+
+                <button class="admin-add-btn" onclick="openAddModal()">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Add Product
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- SEARCH -->
+        <form action="/admin/products" method="GET" class="admin-search-form">
+            <div class="admin-search-box">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search products..."
+                    value="<%= search %>"
+                    class="admin-search-input">
+            </div>
+        </form>
+
+        <!-- PRODUCTS TABLE -->
+        <div class="admin-card admin-table-card">
+
+            <% if(products.length === 0){ %>
+
+                <p class="admin-empty-text">No products found</p>
+
+            <% } else { %>
+
+                <table class="admin-products-table">
+
+                    <thead>
+                        <tr>
+                            <th class="admin-th-product">Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Weights</th>
+                            <th class="admin-th-actions">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <% products.forEach(product => { %>
+
+                            <tr>
+
+                                <td>
+                                    <div class="admin-product-cell">
+                                        <img src="<%= product.image %>" alt="<%= product.name %>" class="admin-product-thumb">
+                                        <div>
+                                            <p class="admin-product-name"><%= product.name %></p>
+                                            <p class="admin-product-desc"><%= product.description.slice(0, 50) %><%= product.description.length > 50 ? '...' : '' %></p>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="admin-cell-category"><%= product.category.charAt(0).toUpperCase() + product.category.slice(1) %></td>
+
+                                <td class="admin-cell-price">
+                                    ₹<%= product.prices["250"] || product.prices["500"] || product.prices["1000"] %>
+                                </td>
+
+                                <td class="admin-cell-weights">
+                                    <%
+                                        const weightLabels = [];
+                                        if(product.prices["250"]) weightLabels.push("250g");
+                                        if(product.prices["500"]) weightLabels.push("500g");
+                                        if(product.prices["1000"]) weightLabels.push("1kg");
+                                    %>
+                                    <%= weightLabels.join(", ") %>
+                                </td>
+
+                                <td>
+                                    <div class="admin-action-icons">
+
+                                        <button
+                                            class="admin-icon-action"
+                                            onclick='openEditModal(<%- JSON.stringify(product) %>)'
+                                            title="Edit">
+                                            <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                                        </button>
+
+                                        <form action="/admin/products/<%= product._id %>/delete" method="POST" style="display:inline;">
+                                            <button
+                                                type="submit"
+                                                class="admin-icon-action admin-icon-delete"
+                                                onclick="return confirm('Delete this product?')"
+                                                title="Delete">
+                                                <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
+
+                    </tbody>
+
+                </table>
+
+            <% } %>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="admin-modal-overlay" id="productModalOverlay">
+
+    <div class="admin-modal">
+
+        <div class="admin-modal-header">
+            <h3 class="admin-modal-title" id="modalTitle">Add Product</h3>
+            <button class="admin-modal-close" onclick="closeModal()">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <form
+            id="productForm"
+            action="/admin/products/add"
+            method="POST"
+            enctype="multipart/form-data"
+            class="admin-modal-form">
+
+            <div class="admin-form-group">
+                <label class="admin-form-label">Name</label>
+                <input type="text" name="name" id="formName" class="admin-form-input" required>
+            </div>
+
+            <div class="admin-form-group">
+                <label class="admin-form-label">Description</label>
+                <textarea name="description" id="formDescription" class="admin-form-textarea" rows="3" required></textarea>
+            </div>
+
+            <div class="admin-form-row">
+
+                <div class="admin-form-group">
+                    <label class="admin-form-label">Category</label>
+                    <select name="category" id="formCategory" class="admin-form-input admin-form-select" required>
+                        <option value="whole">Whole</option>
+                        <option value="flavored">Flavored</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="admin-form-group">
+                <label class="admin-form-label">Prices by weight (₹)</label>
+                <div class="admin-price-grid">
+
+                    <div class="admin-price-input-group">
+                        <span class="admin-price-input-label">250g</span>
+                        <input type="number" name="price250" id="formPrice250" class="admin-form-input" placeholder="0" min="0">
+                    </div>
+
+                    <div class="admin-price-input-group">
+                        <span class="admin-price-input-label">500g</span>
+                        <input type="number" name="price500" id="formPrice500" class="admin-form-input" placeholder="0" min="0">
+                    </div>
+
+                    <div class="admin-price-input-group">
+                        <span class="admin-price-input-label">1kg</span>
+                        <input type="number" name="price1000" id="formPrice1000" class="admin-form-input" placeholder="0" min="0">
+                    </div>
+
+                </div>
+                <p class="admin-form-hint">Leave a weight blank if it's not offered for this product</p>
+            </div>
+
+            <div class="admin-form-group">
+                <label class="admin-form-label">Product Image</label>
+
+                <div class="admin-image-upload" onclick="document.getElementById('formImage').click()">
+                    <img id="imagePreview" src="" alt="" style="display:none;">
+                    <div id="uploadPlaceholder" class="admin-upload-placeholder">
+                        <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+                        <span>Click to upload image</span>
+                    </div>
+                </div>
+
+                <input
+                    type="file"
+                    name="image"
+                    id="formImage"
+                    accept="image/*"
+                    class="admin-file-input"
+                    onchange="previewImage(event)">
+
+                <p class="admin-form-hint" id="editImageHint" style="display:none;">Leave empty to keep the current image</p>
+            </div>
+
+            <div class="admin-modal-actions">
+                <button type="button" class="admin-btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="admin-btn-save">Save</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+    const modalOverlay = document.getElementById("productModalOverlay");
+    const productForm = document.getElementById("productForm");
+    const modalTitle = document.getElementById("modalTitle");
+    const imagePreview = document.getElementById("imagePreview");
+    const uploadPlaceholder = document.getElementById("uploadPlaceholder");
+    const editImageHint = document.getElementById("editImageHint");
+    const formImage = document.getElementById("formImage");
+
+    function openAddModal() {
+        modalTitle.innerText = "Add Product";
+        productForm.action = "/admin/products/add";
+        productForm.reset();
+        imagePreview.style.display = "none";
+        uploadPlaceholder.style.display = "flex";
+        editImageHint.style.display = "none";
+        formImage.required = true;
+        modalOverlay.classList.add("admin-modal-show");
+    }
+
+    function openEditModal(product) {
+        modalTitle.innerText = "Edit Product";
+        productForm.action = `/admin/products/${product._id}/edit`;
+
+        document.getElementById("formName").value = product.name;
+        document.getElementById("formDescription").value = product.description;
+        document.getElementById("formCategory").value = product.category;
+        document.getElementById("formPrice250").value = product.prices["250"] || "";
+        document.getElementById("formPrice500").value = product.prices["500"] || "";
+        document.getElementById("formPrice1000").value = product.prices["1000"] || "";
+
+        imagePreview.src = product.image;
+        imagePreview.style.display = "block";
+        uploadPlaceholder.style.display = "none";
+        editImageHint.style.display = "block";
+        formImage.required = false;
+
+        modalOverlay.classList.add("admin-modal-show");
+    }
+
+    function closeModal() {
+        modalOverlay.classList.remove("admin-modal-show");
+    }
+
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = "block";
+            uploadPlaceholder.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Close modal on outside click
+    modalOverlay.addEventListener("click", function (e) {
+        if (e.target === modalOverlay) {
+            closeModal();
+        }
+    });
+
+</script>
+
+<%- include('../../layout/admin-footer') %>

@@ -1,0 +1,141 @@
+
+
+<div class="acc-wrapper">
+
+    <%- include('../../partials/account-sidebar') %>
+
+    <main class="acc-main">
+
+        <div class="acc-page-header">
+            <a href="/account/addresses" class="acc-back-link">
+                <i class="fa-regular fa-arrow-left" aria-hidden="true"></i> Back to addresses
+            </a>
+            <h1 class="acc-page-title"><%= pageTitle %></h1>
+        </div>
+
+        <div class="acc-card">
+
+            <form action="<%= formAction %>" method="POST" class="acc-form">
+
+                <div class="acc-form-row">
+                    <div class="acc-form-group">
+                        <label class="acc-label">Full name</label>
+                        <input
+                            type="text"
+                            name="fullName"
+                            class="acc-input"
+                            value="<%= address ? address.fullName : '' %>"
+                            required>
+                    </div>
+                    <div class="acc-form-group">
+                        <label class="acc-label">Phone number</label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            class="acc-input"
+                            value="<%= address ? address.phone : '' %>"
+                            required>
+                    </div>
+                </div>
+
+                <div class="acc-form-group">
+                    <label class="acc-label">House / Flat / Building</label>
+                    <input
+                        type="text"
+                        name="house"
+                        class="acc-input"
+                        value="<%= address ? address.house : '' %>"
+                        required>
+                </div>
+
+                <div class="acc-form-row">
+                    <div class="acc-form-group">
+                        <label class="acc-label">City / Town</label>
+                        <input
+                            type="text"
+                            name="city"
+                            class="acc-input"
+                            value="<%= address ? address.city : '' %>"
+                            required>
+                    </div>
+                    <div class="acc-form-group">
+                        <label class="acc-label">District</label>
+                        <input
+                            type="text"
+                            name="district"
+                            class="acc-input"
+                            value="<%= address ? address.district : '' %>"
+                            required>
+                    </div>
+                </div>
+
+                <div class="acc-form-row">
+                    <div class="acc-form-group">
+                        <label class="acc-label">State</label>
+                        <input
+                            type="text"
+                            name="state"
+                            class="acc-input"
+                            value="<%= address ? address.state : '' %>"
+                            required>
+                    </div>
+                    <div class="acc-form-group">
+                        <label class="acc-label">Pincode</label>
+                        <input
+                            type="text"
+                            name="pincode"
+                            class="acc-input"
+                            value="<%= address ? address.pincode : '' %>"
+                            maxlength="6"
+                            required>
+                    </div>
+                </div>
+
+                <div class="acc-form-group">
+                    <label class="acc-label">Landmark <span class="acc-optional">(optional)</span></label>
+                    <input
+                        type="text"
+                        name="landmark"
+                        class="acc-input"
+                        value="<%= address ? address.landmark : '' %>"
+                        placeholder="e.g. Near bus stand">
+                </div>
+
+                <div class="acc-form-row">
+
+                    <div class="acc-form-group">
+                        <label class="acc-label">Address type</label>
+                        <select name="addressType" class="acc-input acc-select">
+                            <option value="Home" <%= address && address.addressType === 'Home' ? 'selected' : '' %>>Home</option>
+                            <option value="Work" <%= address && address.addressType === 'Work' ? 'selected' : '' %>>Work</option>
+                            <option value="Other" <%= address && address.addressType === 'Other' ? 'selected' : '' %>>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="acc-form-group acc-form-checkbox-group">
+                        <label class="acc-checkbox-label">
+                            <input
+                                type="checkbox"
+                                name="isDefault"
+                                value="true"
+                                <%= address && address.isDefault ? 'checked' : '' %>>
+                            Set as default address
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="acc-form-actions">
+                    <a href="/account/addresses" class="acc-btn-secondary">Cancel</a>
+                    <button type="submit" class="acc-btn-primary">Save address</button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+

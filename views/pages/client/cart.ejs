@@ -1,0 +1,195 @@
+<section class="container my-5">
+
+    <h1 class="mb-5 navbar-brand">My Cart</h1>
+<% if(cartItems.length === 0){ %>
+
+    <div class="empty-cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <h3>Your cart is empty</h3>
+        <p>Looks like you haven't added anything yet</p>
+        <div class="cart-empty-btn">
+        <a href="/products" class="btn btn-cart">Browse Products</a>
+        </div>
+    </div>
+
+<% } else { %>
+
+    <div class="row">
+
+        <!-- CART ITEMS -->
+        <div class="col-lg-8">
+
+            <% cartItems.forEach(item => { %>
+
+                <div class="cart-item">
+
+                    <!-- IMAGE -->
+                    <div class="cart-image">
+                        <img src="<%= item.product.image %>" alt="">
+                    </div>
+
+                    <!-- PRODUCT DETAILS -->
+                    <div class="cart-info">
+
+                        <div class="cart-top">
+
+                            <div>
+
+                                <h5 class="cart-product-name">
+                                    <%= item.product.name %>
+                                </h5>
+
+                                <p class="cart-weight">
+                                    Weight:
+                                    <%= item.weight == "1000" ? "1kg" : item.weight + "g" %>
+                                </p>
+
+                            </div>
+
+                            <form
+                                action="/cart/remove/<%= item._id %>"
+                                method="POST">
+
+                                <button class="remove-btn">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                        <div class="cart-bottom">
+
+                            <!-- Quantity -->
+                        <div class="quantity-box">
+
+                            <form
+                                action="/cart/decrease/<%= item._id %>"
+                                method="POST">
+
+                                <button>
+
+                                    -
+
+                                </button>
+
+                            </form>
+
+                            <span>
+
+                                <%= item.quantity %>
+
+                            </span>
+
+                            <form
+                                action="/cart/increase/<%= item._id %>"
+                                method="POST">
+
+                                <button>
+
+                                    +
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                            <!-- Price -->
+                            <div class="cart-price">
+
+                                ₹<%= item.product.prices[item.weight] * item.quantity %>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                
+
+            <% }) %>
+
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="col-lg-4">
+
+            <div class="summary-box">
+
+                <h4 class="summary-title">Order Summary</h4>
+
+                <hr>
+
+                <div class="summary-row">
+
+                    <span>Subtotal</span>
+
+                    <span>
+
+                        ₹<%= subtotal %>
+
+                    </span>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>Delivery</span>
+
+                    <span>
+
+                        <% if(deliveryCharge===0){ %>
+
+                            FREE
+
+                        <% } else { %>
+
+                            ₹<%= deliveryCharge %>
+
+                        <% } %>
+
+                    </span>
+
+                </div>
+
+                <hr>
+
+                <div class="summary-total">
+
+                    <span>Total</span>
+
+                    <span>
+
+                        ₹<%= total %>
+
+                    </span>
+
+                </div>
+
+                <% if(subtotal<freeDeliveryThreshold && subtotal>0){ %>
+
+                    <p class="free-delivery-msg">
+
+                        Add ₹<%= freeDeliveryThreshold-subtotal %>
+                        more for free delivery
+
+                    </p>
+
+                <% } %>
+                <form action="/checkout/address" method="get">
+                                <button class="checkout-btn mt-4">
+
+                                    Proceed to Checkout
+
+                                </button>
+                </form>
+            </div>
+
+    </div>
+
+<% } %>
+    
+
+</section>

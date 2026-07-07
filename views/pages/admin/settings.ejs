@@ -1,0 +1,244 @@
+<%- include('../../layout/admin-header') %>
+
+<div class="admin-wrapper">
+
+    <%- include('../partials/admin-sidebar', { activePage }) %>
+
+    <main class="admin-main">
+
+        <div class="admin-page-header">
+            <h1 class="admin-page-title">Settings</h1>
+            <p class="admin-page-sub">Manage your store configuration</p>
+        </div>
+
+        <div class="admin-settings-grid">
+
+            <!-- LEFT COLUMN -->
+            <div class="admin-settings-col">
+
+                <!-- STORE INFORMATION -->
+                <div class="admin-card admin-settings-card">
+
+                    <div class="admin-settings-card-header">
+                        <div class="admin-settings-icon admin-icon-green">
+                            <i class="fa-solid fa-store" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3 class="admin-card-title">Store Information</h3>
+                            <p class="admin-settings-card-sub">Basic details about your store</p>
+                        </div>
+                    </div>
+
+                    <form action="/admin/settings/store" method="POST" class="admin-settings-form">
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Store Name</label>
+                            <input
+                                type="text"
+                                name="storeName"
+                                class="admin-form-input"
+                                value="<%= settings.storeName %>"
+                                required>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Tagline</label>
+                            <input
+                                type="text"
+                                name="tagline"
+                                class="admin-form-input"
+                                value="<%= settings.tagline %>"
+                                placeholder="e.g. Premium Quality Cashews">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Contact Email</label>
+                            <input
+                                type="email"
+                                name="contactEmail"
+                                class="admin-form-input"
+                                value="<%= settings.contactEmail %>"
+                                placeholder="support@safalam.com">
+                        </div>
+
+                        <div class="admin-settings-form-footer">
+                            <button type="submit" class="admin-btn-save">Save Changes</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <!-- ADMIN ACCOUNT (read-only) -->
+                <div class="admin-card admin-settings-card">
+
+                    <div class="admin-settings-card-header">
+                        <div class="admin-settings-icon admin-icon-gold">
+                            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3 class="admin-card-title">Admin Account</h3>
+                            <p class="admin-settings-card-sub">Your login credentials</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-settings-readonly-row">
+                        <span class="admin-settings-readonly-label">Username</span>
+                        <span class="admin-settings-readonly-value"><%= admin ? admin.username : 'admin' %></span>
+                    </div>
+
+                    <div class="admin-settings-readonly-row">
+                        <span class="admin-settings-readonly-label">Password</span>
+                        <span class="admin-settings-readonly-value">••••••••</span>
+                    </div>
+
+                    <div class="admin-settings-readonly-row">
+                        <span class="admin-settings-readonly-label">Last updated</span>
+                        <span class="admin-settings-readonly-value">
+                            <%= admin ? new Date(admin.updatedAt).toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'}) : '—' %>
+                        </span>
+                    </div>
+
+                    <div class="admin-settings-notice">
+                        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                        To change credentials, update them directly in the database or via the seed script.
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="admin-settings-col">
+
+                <!-- DELIVERY SETTINGS -->
+                <div class="admin-card admin-settings-card">
+
+                    <div class="admin-settings-card-header">
+                        <div class="admin-settings-icon admin-icon-green">
+                            <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3 class="admin-card-title">Delivery Settings</h3>
+                            <p class="admin-settings-card-sub">Charge and free delivery rules</p>
+                        </div>
+                    </div>
+
+                    <form action="/admin/settings/delivery" method="POST" class="admin-settings-form">
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Delivery Charge (₹)</label>
+                            <div class="admin-input-prefix-wrap">
+                                <span class="admin-input-prefix">₹</span>
+                                <input
+                                    type="number"
+                                    name="deliveryCharge"
+                                    class="admin-form-input admin-input-with-prefix"
+                                    value="<%= settings.deliveryCharge %>"
+                                    min="0"
+                                    required>
+                            </div>
+                            <p class="admin-form-hint">Charged when order is below the free delivery threshold</p>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label">Free Delivery Threshold (₹)</label>
+                            <div class="admin-input-prefix-wrap">
+                                <span class="admin-input-prefix">₹</span>
+                                <input
+                                    type="number"
+                                    name="freeDeliveryThreshold"
+                                    class="admin-form-input admin-input-with-prefix"
+                                    value="<%= settings.freeDeliveryThreshold %>"
+                                    min="0"
+                                    required>
+                            </div>
+                            <p class="admin-form-hint">Orders at or above this amount get free delivery</p>
+                        </div>
+
+                        <!-- PREVIEW -->
+                        <div class="admin-delivery-preview">
+                            <p class="admin-delivery-preview-title">Current rule preview</p>
+                            <div class="admin-delivery-preview-row">
+                                <span>Order below ₹<span id="previewThreshold"><%= settings.freeDeliveryThreshold %></span></span>
+                                <span class="admin-delivery-preview-charge">₹<span id="previewCharge"><%= settings.deliveryCharge %></span> delivery</span>
+                            </div>
+                            <div class="admin-delivery-preview-row">
+                                <span>Order ₹<span id="previewThreshold2"><%= settings.freeDeliveryThreshold %></span> and above</span>
+                                <span class="admin-delivery-preview-free">FREE delivery</span>
+                            </div>
+                        </div>
+
+                        <div class="admin-settings-form-footer">
+                            <button type="submit" class="admin-btn-save">Save Changes</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <!-- STORE STATS (read-only summary) -->
+                <div class="admin-card admin-settings-card">
+
+                    <div class="admin-settings-card-header">
+                        <div class="admin-settings-icon admin-icon-gold">
+                            <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h3 class="admin-card-title">Quick Info</h3>
+                            <p class="admin-settings-card-sub">System overview</p>
+                        </div>
+                    </div>
+
+                    <div class="admin-settings-readonly-row">
+                        <span class="admin-settings-readonly-label">Settings last saved</span>
+                        <span class="admin-settings-readonly-value">
+                            <%= new Date(settings.updatedAt).toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'}) %>
+                        </span>
+                    </div>
+
+                    <div class="admin-settings-readonly-row">
+                        <span class="admin-settings-readonly-label">Current delivery charge</span>
+                        <span class="admin-settings-readonly-value">₹<%= settings.deliveryCharge %></span>
+                    </div>
+
+                    <div class="admin-settings-readonly-row">
+                        <span class="admin-settings-readonly-label">Free delivery above</span>
+                        <span class="admin-settings-readonly-value">₹<%= settings.freeDeliveryThreshold %></span>
+                    </div>
+
+                    <div class="admin-settings-readonly-row">
+                        <span class="admin-settings-readonly-label">Contact email</span>
+                        <span class="admin-settings-readonly-value">
+                            <%= settings.contactEmail || '—' %>
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    // Live preview update
+    const chargeInput = document.querySelector('input[name="deliveryCharge"]');
+    const thresholdInput = document.querySelector('input[name="freeDeliveryThreshold"]');
+
+    function updatePreview() {
+        const charge = chargeInput.value || 0;
+        const threshold = thresholdInput.value || 0;
+        document.getElementById("previewCharge").innerText = charge;
+        document.getElementById("previewThreshold").innerText = threshold;
+        document.getElementById("previewThreshold2").innerText = threshold;
+    }
+
+    chargeInput.addEventListener("input", updatePreview);
+    thresholdInput.addEventListener("input", updatePreview);
+</script>
+
+<%- include('../../layout/admin-footer') %>

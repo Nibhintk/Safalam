@@ -1,0 +1,129 @@
+<section class="container my-5">
+
+    <div class="success-card">
+
+        <!-- Tick -->
+        <div class="success-icon">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+        </div>
+
+
+        <h1 class="success-title">
+
+            Order Placed Successfully
+
+        </h1>
+
+
+        <p class="success-message">
+
+            Thank you for shopping with Safalam.
+
+        </p>
+
+
+        <div class="order-details">
+
+            <div class="detail-row">
+
+                <span>
+
+                    Order ID
+
+                </span>
+
+                <span>
+
+                    #<%= order._id %>
+
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+
+                    Payment Method
+
+                </span>
+
+                <span>
+
+                    <%= order.paymentMethod %>
+
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+
+                    Order Status
+
+                </span>
+
+                <span>
+
+                    <%= order.orderStatus %>
+
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span>
+
+                    Total Amount
+
+                </span>
+
+                <span>
+
+                    ₹<%= order.total %>
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <p class="delivery-text">
+
+            Estimated delivery within 3–5 days.
+
+        </p>
+
+
+        <div class="success-buttons">
+
+            <a
+                href="/products"
+                class="continue-btn">
+
+                Continue Shopping
+
+            </a>
+
+
+            <a
+                href="/account/orders"
+                class="view-order-btn">
+
+                View Orders
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>

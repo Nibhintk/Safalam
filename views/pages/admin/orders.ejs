@@ -1,0 +1,146 @@
+<%- include('../../layout/admin-header') %>
+
+<div class="admin-wrapper">
+
+    <%- include('../partials/admin-sidebar', { activePage }) %>
+
+    <main class="admin-main">
+
+        <div class="admin-page-header">
+            <h1 class="admin-page-title">Orders</h1>
+            <p class="admin-page-sub"><%= totalOrders %> total order<%= totalOrders !== 1 ? 's' : '' %></p>
+        </div>
+
+        <!-- SEARCH + FILTERS -->
+        <div class="admin-orders-controls">
+
+            <form action="/admin/orders" method="GET" class="admin-orders-search-form">
+
+                <% if(currentStatus !== 'all'){ %>
+                    <input type="hidden" name="status" value="<%= currentStatus %>">
+                <% } %>
+
+                <div class="admin-search-box admin-orders-search-box">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search by order ID, name, email..."
+                        value="<%= search %>"
+                        class="admin-search-input">
+                </div>
+
+            </form>
+
+            <div class="admin-status-tabs">
+
+                <a href="/admin/orders<%= search ? '?search=' + search : '' %>"
+                    class="admin-status-tab <%= currentStatus === 'all' ? 'admin-status-tab-active' : '' %>">
+                    All
+                </a>
+
+                <a href="/admin/orders?status=Pending<%= search ? '&search=' + search : '' %>"
+                    class="admin-status-tab <%= currentStatus === 'Pending' ? 'admin-status-tab-active' : '' %>">
+                    Placed
+                </a>
+
+                <a href="/admin/orders?status=Confirmed<%= search ? '&search=' + search : '' %>"
+                    class="admin-status-tab <%= currentStatus === 'Confirmed' ? 'admin-status-tab-active' : '' %>">
+                    Confirmed
+                </a>
+
+                <a href="/admin/orders?status=Shipped<%= search ? '&search=' + search : '' %>"
+                    class="admin-status-tab <%= currentStatus === 'Shipped' ? 'admin-status-tab-active' : '' %>">
+                    Shipped
+                </a>
+
+                <a href="/admin/orders?status=Delivered<%= search ? '&search=' + search : '' %>"
+                    class="admin-status-tab <%= currentStatus === 'Delivered' ? 'admin-status-tab-active' : '' %>">
+                    Delivered
+                </a>
+
+                <a href="/admin/orders?status=Cancelled<%= search ? '&search=' + search : '' %>"
+                    class="admin-status-tab <%= currentStatus === 'Cancelled' ? 'admin-status-tab-active' : '' %>">
+                    Cancelled
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- ORDERS TABLE -->
+        <div class="admin-card admin-table-card">
+
+            <% if(orders.length === 0){ %>
+
+                <p class="admin-empty-text">No orders found</p>
+
+            <% } else { %>
+
+                <table class="admin-products-table admin-orders-table">
+
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th class="admin-th-actions">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <% orders.forEach(order => { %>
+
+                            <tr>
+
+                                <td class="admin-order-id-cell">
+                                    #<%= order._id.toString().slice(-8).toUpperCase() %>
+                                </td>
+
+                                <td>
+                                    <p class="admin-customer-name"><%= order.user ? order.user.name : 'Unknown' %></p>
+                                    <p class="admin-customer-email"><%= order.user ? order.user.email : '' %></p>
+                                </td>
+
+                                <td class="admin-cell-muted">
+                                    <%= new Date(order.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'numeric', year:'numeric'}) %>
+                                </td>
+
+                                <td class="admin-cell-muted"><%= order.items.length %></td>
+
+                                <td class="admin-cell-price">₹<%= order.total %></td>
+
+                                <td>
+                                    <span class="admin-status-badge admin-status-<%= order.orderStatus.toLowerCase() %>">
+                                        <%= order.orderStatus.toLowerCase() %>
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <a href="/admin/orders/<%= order._id %>" class="admin-view-btn">
+                                        <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                                        View
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
+
+                    </tbody>
+
+                </table>
+
+            <% } %>
+
+        </div>
+
+    </main>
+
+</div>
+
+<%- include('../../layout/admin-footer') %>

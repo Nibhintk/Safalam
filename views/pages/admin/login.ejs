@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login — Safalam</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-login-body">
+
+    <div class="admin-login-card">
+
+        <div class="admin-login-brand">
+            <span class="admin-brand-icon"><i class="fa-solid fa-leaf" aria-hidden="true"></i></span>
+            <p class="admin-login-brand-name">Safalam</p>
+            <p class="admin-login-brand-sub">Admin Panel</p>
+        </div>
+
+        <% if(error){ %>
+            <div class="admin-login-error">
+                <i class="fa-regular fa-circle-xmark" aria-hidden="true"></i>
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/admin/login" method="POST" class="admin-login-form">
+
+            <div class="admin-login-group">
+                <label class="admin-login-label">Username</label>
+                <input
+                    type="text"
+                    name="username"
+                    class="admin-login-input"
+                    placeholder="Enter username"
+                    required
+                    autofocus>
+            </div>
+
+            <div class="admin-login-group">
+                <label class="admin-login-label">Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    class="admin-login-input"
+                    placeholder="Enter password"
+                    required>
+            </div>
+
+            <button type="submit" class="admin-login-btn">Sign In</button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

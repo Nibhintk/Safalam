@@ -1,0 +1,180 @@
+<section class="container my-5">
+<form action="/place-order" method="POST">
+     <input type="hidden" name="addressId" value="<%= address._id %>">
+    <% if(isBuyNow){ %>
+        <input type="hidden" name="mode" value="buynow">
+    <% } %>
+    <!-- Progress -->
+        <div class="checkout-progress mb-5">
+
+            <div class="cp-step done">
+                <div class="cp-circle">1</div>
+                <span class="cp-label">Address</span>
+            </div>
+
+            <div class="cp-connector done"></div>
+
+            <div class="cp-step done">
+                <div class="cp-circle">2</div>
+                <span class="cp-label">Order Summary</span>
+            </div>
+
+            <div class="cp-connector done"></div>
+
+            <div class="cp-step active">
+                <div class="cp-circle">3</div>
+                <span class="cp-label">Confirmation</span>
+            </div>
+
+        </div>
+
+    <div class="row">
+
+        <!-- LEFT -->
+        <div class="col-lg-8">
+
+            <!-- Payment Card -->
+<div class="payment-card">
+
+    <h4 class="mb-4">
+
+        Payment Method
+
+    </h4>
+
+    <label class="payment-option">
+
+            <input
+                type="radio"
+                name="paymentMethod"
+                value="COD"
+                checked>
+
+            <div>
+                <h6>Cash On Delivery</h6>
+                <small>Pay when your order arrives</small>
+            </div>
+
+        </label>
+
+<!--
+    <label class="payment-option">
+
+        <input
+            type="radio"
+            name="paymentMethod"
+            value="Razorpay">
+
+        <div>
+
+            <h6>
+
+                Razorpay
+
+            </h6>
+
+            <small>
+
+                Cards, UPI, Net Banking
+
+            </small>
+
+        </div>
+
+    </label>
+
+
+    <label class="payment-option">
+
+        <input
+            type="radio"
+            name="paymentMethod"
+            value="UPI">
+
+        <div>
+
+            <h6>
+
+                UPI
+
+            </h6>
+
+            <small>
+
+                Google Pay, PhonePe, Paytm
+
+            </small>
+
+        </div>
+
+    </label>
+-->
+
+</div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-4">
+
+            <!-- Price Summary -->
+<div class="summary-box">
+
+    <h4>
+
+        Price Details
+
+    </h4>
+
+    <hr>
+
+    <div class="summary-row">
+
+        <span>Subtotal</span>
+
+        <span>₹<%= subtotal %></span>
+
+    </div>
+
+    <div class="summary-row">
+
+        <span>Delivery</span>
+
+        <span>
+
+            <% if(deliveryCharge===0){ %>
+
+                FREE
+
+            <% } else { %>
+
+                ₹<%= deliveryCharge %>
+
+            <% } %>
+
+        </span>
+
+    </div>
+
+    <hr>
+
+    <div class="summary-total">
+
+        <span>Total</span>
+
+        <span>₹<%= total %></span>
+
+    </div>
+    
+    <button class="checkout-btn mt-4" type="submit">
+
+        Place Order
+
+    </button>
+
+</div>
+        </div>
+
+    </div>
+</form>
+</section>
