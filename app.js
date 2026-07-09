@@ -39,6 +39,7 @@ app.use(expressLayouts);
 app.set("layout", "layout/boilerplate");
 
 // ---------- Middleware ----------
+app.set("trust proxy", 1);
 app.use(express.static(path.join(__dirname, "public"))); // Serve static files
 app.use(express.urlencoded({ extended: true })); // For form data
 app.use(express.json()); // Add this for JSON data
@@ -155,5 +156,5 @@ app.use((err, req, res, next) => {
 // ---------- Server Listen ----------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
