@@ -1,6 +1,6 @@
-const User = require("../models/User");
-const Order = require("../models/Order");
-const Address = require("../models/Address");
+const User = require("../models/user");
+const Order = require("../models/order");
+const Address = require("../models/address");
 const bcrypt = require("bcrypt");
 
 const accountController = {

@@ -1,10 +1,10 @@
 const bcrypt = require("bcrypt");
-const Admin = require("../models/Admin");
-const Order = require("../models/Order");
-const Product = require("../models/Product");
-const User = require("../models/User");
-const Review = require("../models/Review");
-const Address = require("../models/Address");
+const Admin = require("../models/admin");
+const Order = require("../models/order");
+const Product = require("../models/product");
+const User = require("../models/user");
+const Review = require("../models/review");
+const Address = require("../models/address");
 const Settings = require("../models/settings");
 const { cloudinary } = require("../config/cloudinary");
 
