@@ -58,3 +58,6 @@ SESSION_SECRET=your_secret
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
+
+## Live Link
+https://safalam.onrender.com
