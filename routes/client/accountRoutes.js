@@ -7,25 +7,25 @@ const isLoggedIn = require("../../midllewares/middleware.js");
 router.use(isLoggedIn);
 
 // Dashboard
-router.get("/account", accountController.accountPage);
+router.get("/", accountController.accountPage);
 
 // Profile
-router.get("/account/profile", accountController.profilePage);
-router.post("/account/profile", accountController.updateProfile);
-router.post("/account/profile/change-password", accountController.changePassword);
+router.get("/profile", accountController.profilePage);
+router.post("/profile", accountController.updateProfile);
+router.post("/profile/change-password", accountController.changePassword);
 
 // Orders
-router.get("/account/orders", accountController.ordersPage);
-router.get("/account/orders/:id", accountController.orderDetailPage);
-router.post("/account/orders/:id/cancel", accountController.cancelOrder);
+router.get("/orders", accountController.ordersPage);
+router.get("/orders/:id", accountController.orderDetailPage);
+router.post("/orders/:id/cancel", accountController.cancelOrder);
 
 // Addresses
-router.get("/account/addresses", accountController.addressesPage);
-router.get("/account/addresses/add", accountController.addAddressPage);
-router.post("/account/addresses/add", accountController.addAddress);
-router.get("/account/addresses/edit/:id", accountController.editAddressPage);
-router.post("/account/addresses/edit/:id", accountController.editAddress);
-router.post("/account/addresses/delete/:id", accountController.deleteAddress);
-router.post("/account/addresses/default/:id", accountController.setDefaultAddress);
+router.get("/addresses", accountController.addressesPage);
+router.get("/addresses/add", accountController.addAddressPage);
+router.post("/addresses/add", accountController.addAddress);
+router.get("/addresses/edit/:id", accountController.editAddressPage);
+router.post("/addresses/edit/:id", accountController.editAddress);
+router.post("/addresses/delete/:id", accountController.deleteAddress);
+router.post("/addresses/default/:id", accountController.setDefaultAddress);
 
 module.exports = router;

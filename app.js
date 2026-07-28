@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load environment variables
+require("dotenv").config();
 
 const express = require("express");
 const app = express();
@@ -12,11 +12,11 @@ const clientRoutes = require("./routes/client/clientRoutes");
 const adminRoutes = require("./routes/admin/adminRoutes");
 const accountRoutes = require("./routes/client/accountRoutes");
 const flash = require("connect-flash");
-const Product = require("./models/product.js"); // Example model
+const Product = require("./models/product.js");
 const User = require("./models/user");
+const Admin = require("./models/admin"); // adjust to your actual admin model
 const Cart = require("./models/cart");
 const helmet = require("helmet");
-
 
 // ---------- MongoDB Connection ----------
 async function main() {
@@ -30,109 +30,111 @@ async function main() {
 main();
 app.use(helmet({ contentSecurityPolicy: false }));
 
-// ---------- Setting View Engine ----------
+// ---------- View Engine ----------
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-
-// Use express-ejs-layouts BEFORE setting the layout
 app.use(expressLayouts);
 app.set("layout", "layout/boilerplate");
 
-// ---------- Middleware ----------
+// ---------- Base Middleware ----------
 app.set("trust proxy", 1);
-app.use(express.static(path.join(__dirname, "public"))); // Serve static files
-app.use(express.urlencoded({ extended: true })); // For form data
-app.use(express.json()); // Add this for JSON data
-app.use(session({
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-    secret:process.env.SECRET_KEY ,
+// ---------- SEPARATE SESSIONS FOR USER AND ADMIN ----------
+const mongoStore = MongoStore.create({ mongoUrl: process.env.MONGO_URL });
 
-    resave:false,
-
-    saveUninitialized:false,
-
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URL
-    }),
-
-    cookie:{
-        maxAge:1000*60*60*24*7
+const userSession = session({
+    name: "user.sid",              // distinct cookie name
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: false,
+    store: mongoStore,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        path: "/"                  // sent on every request, but that's fine since name differs
     }
+});
 
-}));
-app.use(flash()); 
-app.use(async (req,res,next)=>{
+const adminSession = session({
+    name: "admin.sid",             // distinct cookie name
+    secret: process.env.ADMIN_SECRET_KEY || process.env.SECRET_KEY, // ideally a different secret
+    resave: false,
+    saveUninitialized: false,
+    store: mongoStore,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        path: "/admin"              // only sent for /admin routes
+    }
+});
 
-    try{
+// Route each request to the correct session middleware based on path
+app.use((req, res, next) => {
+    if (req.path.startsWith("/admin")) {
+        return adminSession(req, res, next);
+    }
+    return userSession(req, res, next);
+});
 
-        if(req.session.userId){
+app.use(flash());
 
-            const user =
-                await User.findById(
-                    req.session.userId
-                );
+// ---------- Load current USER (non-admin routes) ----------
+app.use(async (req, res, next) => {
+    if (req.path.startsWith("/admin")) return next(); // handled below
 
+    try {
+        if (req.session.userId) {
+            const user = await User.findById(req.session.userId);
             req.user = user;
-
             res.locals.user = user;
 
-            const cartItems =
-                await Cart.find({
-
-                    user: user._id
-
-                });
-
+            const cartItems = await Cart.find({ user: user._id });
             let cartCount = 0;
-
-            cartItems.forEach(item=>{
-
-                cartCount += item.quantity;
-
-            });
-
-            res.locals.cartCount =
-                cartCount;
-
-        }
-        else{
-
+            cartItems.forEach(item => { cartCount += item.quantity; });
+            res.locals.cartCount = cartCount;
+        } else {
             res.locals.user = null;
-
             res.locals.cartCount = 0;
-
         }
-
         next();
-
-    }
-
-    catch(err){
-
+    } catch (err) {
         console.log(err);
-
         next();
-
     }
-
 });
-app.use((req, res, next) => {
 
+// ---------- Load current ADMIN (admin routes) ----------
+app.use(async (req, res, next) => {
+    if (!req.path.startsWith("/admin")) return next();
+
+    try {
+        if (req.session.adminId) {
+            const admin = await Admin.findById(req.session.adminId);
+            req.admin = admin;
+            res.locals.admin = admin;
+        } else {
+            res.locals.admin = null;
+        }
+        next();
+    } catch (err) {
+        console.log(err);
+        next();
+    }
+});
+
+app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-
     next();
-
 });
+
 // ---------- Routes ----------
 app.use("/", clientRoutes);
-
-
-app.use("/", accountRoutes);
-
+app.use("/account", accountRoutes);
 app.use("/admin", adminRoutes);
 
-// 404 — page not found
+// 404
 app.use((req, res) => {
     res.status(404).render("pages/error", {
         layout: false,
@@ -142,7 +144,7 @@ app.use((req, res) => {
     });
 });
 
-// 500 — server error
+// 500
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).render("pages/error", {
@@ -153,7 +155,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// ---------- Server Listen ----------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

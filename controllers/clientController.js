@@ -226,24 +226,15 @@ login: async (req, res) => {
         });
     }
 },
-logout: (req,res)=>{
-
-    req.session.destroy((err)=>{
-
-        if(err){
-
+logout: (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
             console.log(err);
-
             return res.redirect("/");
-
         }
-
-        res.clearCookie("connect.sid");
-
+        res.clearCookie("user.sid"); // match the session name
         res.redirect("/");
-
     });
-
 },
 cartPage: async (req, res) => {
 

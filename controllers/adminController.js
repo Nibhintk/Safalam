@@ -46,9 +46,15 @@ const adminController = {
     },
 
     logout: (req, res) => {
-        req.session.adminId = null;
+    req.session.destroy((err) => {
+        if (err) {
+            console.log(err);
+            return res.redirect("/admin/login");
+        }
+        res.clearCookie("admin.sid", { path: "/admin" }); // must match cookie path used when set
         res.redirect("/admin/login");
-    },
+    });
+},
 
     dashboard: async (req, res) => {
         try {
