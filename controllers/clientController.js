@@ -9,11 +9,11 @@ const Review = require("../models/review");
 const Settings = require("../models/settings");
 const bcrypt = require("bcrypt");
 module.exports = {
-    home: async (req, res) => {
-        const products = await Product.find().limit(3);
-        res.render("pages/client/home", { products });
-        console.log(req.session);
-    },
+home: async (req, res) => {
+    const products = await Product.find().limit(3);
+    console.log("HOME:", req.sessionID, "cookie.path=", req.session.cookie.path, "userId=", req.session.userId);
+    res.render("pages/client/home", { products });
+},
 
 allProducts: async (req, res) => {
     try {
@@ -195,7 +195,7 @@ loginPage: (req,res)=>{
 
 },
 login: async (req, res) => {
-    try {
+     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
 
@@ -212,6 +212,8 @@ login: async (req, res) => {
         }
 
         req.session.userId = user._id;
+        console.log("LOGIN SET:", req.sessionID, "cookie.path=", req.session.cookie.path, "userId=", req.session.userId);
+
         const redirectUrl = req.session.redirectUrl || "/";
         delete req.session.redirectUrl;
         res.redirect(redirectUrl);

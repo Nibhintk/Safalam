@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 
 const express = require("express");
@@ -43,38 +44,49 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // ---------- SEPARATE SESSIONS FOR USER AND ADMIN ----------
-const mongoStore = MongoStore.create({ mongoUrl: process.env.MONGO_URL });
+// ---------- SEPARATE SESSIONS FOR USER AND ADMIN ----------
+const userStore = MongoStore.create({
+    mongoUrl: process.env.MONGO_URL,
+    collectionName: "user_sessions"
+});
+
+const adminStore = MongoStore.create({
+    mongoUrl: process.env.MONGO_URL,
+    collectionName: "admin_sessions"
+});
 
 const userSession = session({
-    name: "user.sid",              // distinct cookie name
+    name: "user.sid",
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    store: mongoStore,
+    store: userStore,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
-        path: "/"                  // sent on every request, but that's fine since name differs
+        path: "/"
     }
 });
 
 const adminSession = session({
-    name: "admin.sid",             // distinct cookie name
-    secret: process.env.ADMIN_SECRET_KEY || process.env.SECRET_KEY, // ideally a different secret
+    name: "admin.sid",
+    secret: process.env.ADMIN_SECRET_KEY || process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    store: mongoStore,
+    store: adminStore,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7,
-        path: "/admin"              // only sent for /admin routes
+        path: "/admin"
     }
 });
-
 // Route each request to the correct session middleware based on path
 app.use((req, res, next) => {
-    if (req.path.startsWith("/admin")) {
-        return adminSession(req, res, next);
-    }
-    return userSession(req, res, next);
+    const isAdmin = req.path.startsWith("/admin");
+    const mw = isAdmin ? adminSession : userSession;
+  
+    mw(req, res, () => {
+
+        next();
+    });
 });
 
 app.use(flash());
